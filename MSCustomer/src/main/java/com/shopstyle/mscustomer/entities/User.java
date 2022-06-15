@@ -14,27 +14,30 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shopstyle.mscustomer.dto.UserDTO;
+import com.shopstyle.mscustomer.dto.UserFormDTO;
 import com.shopstyle.mscustomer.enums.Sex;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_user")
 @Data
+@NoArgsConstructor
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull @NotEmpty
+	@NotNull @Length(min = 3)
 	private String firstName;
 	
-	@NotNull @NotEmpty
+	@NotNull @Length(min = 3)
 	private String lastName;
 	
 	@Enumerated(EnumType.STRING)
@@ -43,7 +46,7 @@ public class User {
 	@CPF
 	private String cpf;
 	
-	@NotNull @NotEmpty
+	@NotNull
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate birthDate;
 	
@@ -52,21 +55,20 @@ public class User {
 	private String email;
 	
 	@NotNull @NotEmpty
+	@Length(min = 8)
 	private String password;
 	
 	@NotNull
 	private boolean active;
 	
-	public User() {}
-	
-	public User(UserDTO userDTO) {
-		this.firstName = userDTO.getFirstName();
-		this.lastName = userDTO.getLastName();
-		this.Sex = userDTO.getSex();
-		this.cpf = userDTO.getCpf();
-		this.birthDate = userDTO.getBirthDate();
-		this.email = userDTO.getEmail();
-		this.password = userDTO.getPassword();
-		this.active = userDTO.isActive();
+	public User(UserFormDTO userFormDTO) {
+		this.firstName = userFormDTO.getFirstName();
+		this.lastName = userFormDTO.getLastName();
+		this.Sex = userFormDTO.getSex();
+		this.cpf = userFormDTO.getCpf();
+		this.birthDate = userFormDTO.getBirthdate();
+		this.email = userFormDTO.getEmail();
+		this.password = userFormDTO.getPassword();
+		this.active = userFormDTO.isActive();
 	}
 }
