@@ -19,6 +19,8 @@ import lombok.Getter;
 
 @Getter
 public class UserFormDTO {
+	
+	private Long id;
 
 	@NotNull (message = "firstName field cannot be null")
 	@Length(min = 3)
@@ -44,8 +46,13 @@ public class UserFormDTO {
 	
 	@NotNull
 	@NotEmpty (message = "password field cannot be empty")
+	@Length(min = 8)
 	private String password;
 	
 	@NotNull
 	private boolean active;
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

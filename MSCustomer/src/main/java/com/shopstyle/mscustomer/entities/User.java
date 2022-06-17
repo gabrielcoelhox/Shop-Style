@@ -16,18 +16,23 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shopstyle.mscustomer.dto.UserFormDTO;
 import com.shopstyle.mscustomer.enums.Sex;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_user")
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
 	@Id
@@ -68,7 +73,7 @@ public class User {
 		this.cpf = userFormDTO.getCpf();
 		this.birthDate = userFormDTO.getBirthdate();
 		this.email = userFormDTO.getEmail();
-		this.password = userFormDTO.getPassword();
+		this.password = new BCryptPasswordEncoder().encode(userFormDTO.getPassword());
 		this.active = userFormDTO.isActive();
 	}
 }

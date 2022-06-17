@@ -7,20 +7,61 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mscustomer.dto.UserDTO;
 import com.shopstyle.mscustomer.dto.UserFormDTO;
 import com.shopstyle.mscustomer.entities.User;
 import com.shopstyle.mscustomer.exceptions.DefaultException;
+import com.shopstyle.mscustomer.exceptions.InvalidPasswordException;
 import com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscustomer.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
+	@Lazy
+	@Autowired
+    private PasswordEncoder encoder;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Transactional
+    public User salvar(User usuario) {
+        return userRepository.save(usuario);
+	}
+	
+	public UserDetails authenticate(User usuario) {
+        UserDetails user = loadUserByUsername(usuario.getEmail());
+        boolean senhasBatem = encoder.matches(usuario.getPassword(), user.getPassword());
+
+        if(senhasBatem) {
+            return user;
+        }
+        throw new InvalidPasswordException();
+    }
+	
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found in database."));
+		
+		String[] roles = usuario.isActive() ?
+                new String[]{"ADMIN", "USER"} : new String[]{"USER"};
+
+        return User
+                .builder()
+                .email(usuario.getEmail())
+                .password(usuario.getPassword())
+                .roles(roles)
+                .build();
+	}
 	
 	@Transactional
 	public List<UserDTO> findAll() {
@@ -47,7 +88,7 @@ public class UserService {
 	
 	public UserDTO update(@Valid UserFormDTO userFormDTO, Long id) {
 		User newUser = userRepository.findById(id).orElseThrow(
-				() -> new DefaultException("ID: " + id + " not found.", "NOT_FOUND", 404));
+				() -> new DefaultException("User with id " + id + " not found, enter a valid id", "NOT_FOUND", 404));
 		try {
 			newUser.setFirstName(userFormDTO.getFirstName());
 			newUser.setLastName(userFormDTO.getLastName());
