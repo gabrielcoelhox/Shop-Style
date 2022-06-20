@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +66,7 @@ public class User {
 	@NotNull
 	private boolean active;
 	
-	public User(UserFormDTO userFormDTO) {
+	public Usuario(UserFormDTO userFormDTO) {
 		this.firstName = userFormDTO.getFirstName();
 		this.lastName = userFormDTO.getLastName();
 		this.Sex = userFormDTO.getSex();

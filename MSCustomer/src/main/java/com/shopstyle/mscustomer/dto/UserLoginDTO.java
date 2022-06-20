@@ -10,9 +10,11 @@ import lombok.Setter;
 @Setter
 public class UserLoginDTO {
 
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private String email;
 	
-	@NotNull @NotEmpty
+	@NotNull
+	@NotEmpty
 	private String password;
 }

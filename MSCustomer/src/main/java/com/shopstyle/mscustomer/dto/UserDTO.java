@@ -2,7 +2,7 @@ package com.shopstyle.mscustomer.dto;
 
 import java.time.LocalDate;
 
-import com.shopstyle.mscustomer.entities.User;
+import com.shopstyle.mscustomer.entities.Usuario;
 import com.shopstyle.mscustomer.enums.Sex;
 
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class UserDTO {
 	private String email;
 	private boolean active;
 
-	public UserDTO(User usuarioObj) {
+	public UserDTO(Usuario usuarioObj) {
 		this.firstName = usuarioObj.getFirstName();
 		this.lastName = usuarioObj.getLastName();
 		this.sex = usuarioObj.getSex();

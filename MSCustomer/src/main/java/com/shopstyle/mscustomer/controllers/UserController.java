@@ -1,6 +1,5 @@
 package com.shopstyle.mscustomer.controllers;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,27 +15,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.shopstyle.mscustomer.dto.UserDTO;
 import com.shopstyle.mscustomer.dto.UserFormDTO;
+import com.shopstyle.mscustomer.entities.Usuario;
 import com.shopstyle.mscustomer.services.UserService;
+import com.shopstyle.mscustomer.services.UserServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/v1")
+@RequiredArgsConstructor
 public class UserController {
 
 	@Autowired
+	private final UserServiceImpl userServiceImpl;
+	
+	@Autowired
 	private UserService userService;
 	
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	
-	@ApiOperation(value= "Retorn all users")
+	@ApiOperation(value= "Return all users")
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> findAll() {
 		List<UserDTO> listUsuarioDTO = userService.findAll();
@@ -51,14 +57,13 @@ public class UserController {
 	
 	@Transactional
 	@PostMapping("/users")
-	@ApiOperation(value = "Insert a new user")
-	public ResponseEntity<UserDTO> insert(@RequestBody @Valid UserFormDTO insertUser, UriComponentsBuilder uriComponentsBuilder) {
-		String senhaCriptografada = passwordEncoder.encode(insertUser.getPassword());
-		insertUser.setPassword(senhaCriptografada);
-		
-		URI uri = uriComponentsBuilder.path("/v1/users/{id}").buildAndExpand(insertUser.getId()).toUri();
-		return ResponseEntity.created(uri).body(userService.insert(insertUser));
-	}
+	@ApiOperation(value = "Insert a new User")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Usuario save(@RequestBody @Valid Usuario user){
+        String senhaCriptografada = passwordEncoder.encode(user.getPassword());
+        user.setPassword(senhaCriptografada);
+        return userServiceImpl.save(user);
+    }
 	
 	@ApiOperation(value= "Update a user")
 	@ApiResponses({
@@ -74,23 +79,4 @@ public class UserController {
 	public ResponseEntity<UserDTO> update(@RequestBody @Valid UserFormDTO userFormDto, @PathVariable Long id) {
 		return new ResponseEntity<>(userService.update(userFormDto, id), HttpStatus.OK);
 	}
-	
-//	@PostMapping("/login")
-//	public ResponseEntity<UserDTO> login(UserLoginDTO userLoginDto) {
-//		return new ResponseEntity<>(userService.login(userLoginDto), HttpStatus.ACCEPTED);
-//	}
-	
-//	@PostMapping("/login")
-//    public TokenDTO authenticate(@RequestBody CredentialsDTO credentials) {
-//        try {
-//            User user = User.builder()
-//                    .email(credentials.getEmail())
-//                    .password(credentials.getPassword()).build();
-//            UserDetails authenticatedUser = userService.authenticate(user);
-//            String token = jwtService.gerarToken(user);
-//            return new TokenDTO(user.getEmail(), token);
-//        } catch (UsernameNotFoundException | InvalidPasswordException ex) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
-//        }
-//    }
 }
