@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shopstyle.mscustomer.dto.UserFormDTO;
+import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.enums.Sex;
 
 import lombok.AllArgsConstructor;
@@ -28,12 +28,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "tb_customer")
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +45,9 @@ public class Usuario {
 	@NotNull @Length(min = 3)
 	private String lastName;
 	
+	@NotNull
 	@Enumerated(EnumType.STRING)
-	private Sex Sex;
+	private Sex sex;
 	
 	@CPF
 	private String cpf;
@@ -60,20 +61,20 @@ public class Usuario {
 	private String email;
 	
 	@NotNull @NotEmpty
-	@Length(min = 8)
+	@Length(min = 6)
 	private String password;
 	
 	@NotNull
 	private boolean active;
 	
-	public Usuario(UserFormDTO userFormDTO) {
-		this.firstName = userFormDTO.getFirstName();
-		this.lastName = userFormDTO.getLastName();
-		this.Sex = userFormDTO.getSex();
-		this.cpf = userFormDTO.getCpf();
-		this.birthDate = userFormDTO.getBirthdate();
-		this.email = userFormDTO.getEmail();
-		this.password = new BCryptPasswordEncoder().encode(userFormDTO.getPassword());
-		this.active = userFormDTO.isActive();
+	public Customer(CustomerFormDTO customerFormDTO) {
+		this.firstName = customerFormDTO.getFirstName();
+		this.lastName = customerFormDTO.getLastName();
+		this.sex = customerFormDTO.getSex();
+		this.cpf = customerFormDTO.getCpf();
+		this.birthDate = customerFormDTO.getBirthdate();
+		this.email = customerFormDTO.getEmail();
+		this.password = new BCryptPasswordEncoder().encode(customerFormDTO.getPassword());
+		this.active = customerFormDTO.isActive();
 	}
 }

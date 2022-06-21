@@ -11,36 +11,36 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.shopstyle.mscustomer.entities.Usuario;
-import com.shopstyle.mscustomer.repository.UserRepository;
+import com.shopstyle.mscustomer.entities.Customer;
+import com.shopstyle.mscustomer.repository.CustomerRepository;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
+public class CustomerServiceImpl implements UserDetailsService {
 
 	@Lazy
     @Autowired
     private PasswordEncoder encoder;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private CustomerRepository customerRepository;
 	
 	@Transactional
-    public Usuario save(Usuario usuario) {
-        return userRepository.save(usuario);
+    public Customer save(Customer Customer) {
+        return customerRepository.save(Customer);
 	}
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Usuario usuario = userRepository.findByEmail(email)
+		Customer Customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email not found in database."));
 		
-		String[] roles = usuario.isActive() ?
+		String[] roles = Customer.isActive() ?
                 new String[]{"ACTIVE", "USER"} : new String[]{"USER"};
 		
 		return User
                 .builder()
-                .username(usuario.getEmail())
-                .password(usuario.getPassword())
+                .username(Customer.getEmail())
+                .password(Customer.getPassword())
                 .roles(roles)
                 .build();
     }

@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.shopstyle.mscustomer.entities.Usuario;
+import com.shopstyle.mscustomer.entities.Customer;
 
 @Repository
-public interface UserRepository extends JpaRepository<Usuario, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	
-	Optional<Usuario> findByEmail(String email);
+	Optional<Customer> findByEmail(String email);
 }

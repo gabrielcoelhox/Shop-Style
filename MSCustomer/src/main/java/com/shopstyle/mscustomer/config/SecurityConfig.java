@@ -11,13 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.shopstyle.mscustomer.services.UserServiceImpl;
+import com.shopstyle.mscustomer.services.CustomerServiceImpl;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-    private UserServiceImpl userServiceImpl;
+    private CustomerServiceImpl customerServiceImpl;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(userServiceImpl)
+            .userDetailsService(customerServiceImpl)
             .passwordEncoder(passwordEncoder());
     }
 	

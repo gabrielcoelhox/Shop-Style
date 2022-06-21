@@ -18,7 +18,7 @@ import com.shopstyle.mscustomer.enums.Sex;
 import lombok.Getter;
 
 @Getter
-public class UserFormDTO {
+public class CustomerFormDTO {
 	
 	private Long id;
 

@@ -2,7 +2,7 @@ package com.shopstyle.mscustomer.dto;
 
 import java.time.LocalDate;
 
-import com.shopstyle.mscustomer.entities.Usuario;
+import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.enums.Sex;
 
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class CustomerDTO {
 	
 	private String firstName;
 	private String lastName;
@@ -21,12 +21,12 @@ public class UserDTO {
 	private String email;
 	private boolean active;
 
-	public UserDTO(Usuario usuarioObj) {
-		this.firstName = usuarioObj.getFirstName();
-		this.lastName = usuarioObj.getLastName();
-		this.sex = usuarioObj.getSex();
-		this.birthDate = usuarioObj.getBirthDate();
-		this.email = usuarioObj.getEmail();
-		this.active = usuarioObj.isActive();
+	public CustomerDTO(Customer customer) {
+		this.firstName = customer.getFirstName();
+		this.lastName = customer.getLastName();
+		this.sex = customer.getSex();
+		this.birthDate = customer.getBirthDate();
+		this.email = customer.getEmail();
+		this.active = customer.isActive();
 	}
 }
