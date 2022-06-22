@@ -14,18 +14,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerDTO {
 	
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
-	private LocalDate birthDate;
+	private LocalDate birthdate;
 	private String email;
 	private boolean active;
 
 	public CustomerDTO(Customer customer) {
+		this.id = customer.getId();
 		this.firstName = customer.getFirstName();
 		this.lastName = customer.getLastName();
 		this.sex = customer.getSex();
-		this.birthDate = customer.getBirthDate();
+		this.birthdate = customer.getBirthDate();
 		this.email = customer.getEmail();
 		this.active = customer.isActive();
 	}

@@ -23,9 +23,9 @@ public class AddressService {
 	@Autowired
 	private CustomerRepository customerRepository;
 	
-	public AddressDTO save(@Valid AddressFormDTO addressFormDto) {
+	public AddressDTO insert(@Valid AddressFormDTO addressFormDto) {
 		Customer customer = customerRepository.findById(addressFormDto.getCustomerId()).orElseThrow(
-				() -> new DefaultException("Customer Id: " + addressFormDto.getCustomerId() + " not found."));
+				() -> new DefaultException("Customer with id " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		
 		Address address = new Address();
 		address.setStreet(addressFormDto.getStreet());
@@ -42,7 +42,7 @@ public class AddressService {
 
 	public AddressDTO update(Long id, @Valid AddressFormDTO addressFormDto) {
 		Address address = addressRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Address Id: " + addressFormDto.getCustomerId() + " not found."));
+				() -> new DefaultException("Address with id: " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		address.setStreet(addressFormDto.getStreet());
 		address.setNumber(addressFormDto.getNumber());
 		address.setComplement(addressFormDto.getComplement());
@@ -52,5 +52,11 @@ public class AddressService {
 		address.setCep(addressFormDto.getCep());
 		
 		return new AddressDTO(addressRepository.save(address));
+	}
+	
+	public void deleteById(Long id) {
+		addressRepository.findById(id).orElseThrow(
+				() -> new DefaultException("Address with id: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+		addressRepository.deleteById(id);
 	}
 }

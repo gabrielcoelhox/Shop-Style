@@ -1,7 +1,9 @@
 package com.shopstyle.mscustomer.entities;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -66,6 +69,9 @@ public class Customer {
 	
 	@NotNull
 	private boolean active;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+	private List<Address> adresses;
 	
 	public Customer(CustomerFormDTO customerFormDTO) {
 		this.firstName = customerFormDTO.getFirstName();

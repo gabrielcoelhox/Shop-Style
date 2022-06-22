@@ -30,9 +30,11 @@ public class CustomerFormDTO {
 	@Length(min = 3)
 	private String lastName;
 
+	@NotNull (message = "sex field cannot be null")
 	@Enumerated(EnumType.STRING)
 	private Sex sex;
 
+	@NotNull (message = "cpf field cannot be null")
 	@CPF
 	private String cpf;
 	

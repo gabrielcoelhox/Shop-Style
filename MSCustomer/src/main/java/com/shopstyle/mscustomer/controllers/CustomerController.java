@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mscustomer.dto.CustomerDTO;
 import com.shopstyle.mscustomer.dto.CustomerFormDTO;
+import com.shopstyle.mscustomer.dto.CustomerLoginDTO;
 import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.services.CustomerService;
 import com.shopstyle.mscustomer.services.CustomerServiceImpl;
@@ -59,10 +60,10 @@ public class CustomerController {
 	@PostMapping("/customers")
 	@ApiOperation(value = "Insert a new Customer")
     @ResponseStatus(HttpStatus.CREATED)
-    public Customer save(@RequestBody @Valid Customer user){
-        String senhaCriptografada = passwordEncoder.encode(user.getPassword());
-        user.setPassword(senhaCriptografada);
-        return customerServiceImpl.save(user);
+    public Customer save(@RequestBody @Valid Customer customer){
+        String senhaCriptografada = passwordEncoder.encode(customer.getPassword());
+        customer.setPassword(senhaCriptografada);
+        return customerServiceImpl.save(customer);
     }
 	
 	@ApiOperation(value= "Update a customer")
@@ -78,5 +79,10 @@ public class CustomerController {
 	@Transactional
 	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomerFormDTO customerFormDto, @PathVariable Long id) {
 		return new ResponseEntity<>(customerService.update(customerFormDto, id), HttpStatus.OK);
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<CustomerDTO> login(@RequestBody @Valid CustomerLoginDTO customerLoginDto) {
+		return new ResponseEntity<>(customerService.login(customerLoginDto), HttpStatus.ACCEPTED);
 	}
 }

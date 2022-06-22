@@ -20,7 +20,7 @@ public class AddressDTO {
 	private String number;
 	private String complement;
 	private String cep;
-	private CustomerDTO customerDTO;
+	private CustomerDTO customerDto;
 	
 	public AddressDTO(Address address) {
 		this.id = address.getId();
@@ -31,6 +31,6 @@ public class AddressDTO {
 		this.city = address.getCity();
 		this.state = address.getState();
 		this.cep = address.getCep();	
-		this.customerDTO = new CustomerDTO(address.getCustomer());
-	}
+		this.customerDto = new CustomerDTO(address.getCustomer());
+	}	
 }
