@@ -19,6 +19,8 @@ import com.shopstyle.mscustomer.dto.AddressFormDTO;
 import com.shopstyle.mscustomer.services.AddressService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/address")
@@ -34,6 +36,11 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.insert(addressFormDto), HttpStatus.CREATED);
 	}
 	
+	@ApiResponses({
+	      @ApiResponse(code = 200, message = "Update done successfully", response = AddressDTO.class),
+	      @ApiResponse(code = 403, message = "Profile not authorized to perform this operation", response = AddressDTO.class),
+	      @ApiResponse(code = 404, message = "Address not found", response = AddressDTO.class)
+	})
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Update a Address")
 	public ResponseEntity<AddressDTO> update(@PathVariable Long id, @RequestBody @Valid AddressFormDTO addressFormDto) {

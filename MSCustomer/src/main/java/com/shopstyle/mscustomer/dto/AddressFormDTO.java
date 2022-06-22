@@ -14,27 +14,32 @@ import lombok.Setter;
 @Setter
 public class AddressFormDTO {
 
-	@NotNull
+	@NotNull (message = "State field cannot be null")
 	@Enumerated(EnumType.STRING)
 	private State state;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "city field cannot be null") 
+	@NotEmpty
 	private String city;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "district field cannot be null")
+	@NotEmpty
 	private String district;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "street field cannot be null")
+	@NotEmpty
 	private String street;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "number field cannot be null")
+	@NotEmpty
 	private String number;
 	
 	private String complement;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "cep field cannot be null")
+	@NotEmpty
 	private String cep;
 	
-	@NotNull
+	@NotNull (message = "customerId field cannot be null")
 	private Long customerId;
 }

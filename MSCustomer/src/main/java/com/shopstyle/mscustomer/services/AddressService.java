@@ -1,6 +1,5 @@
 package com.shopstyle.mscustomer.services;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +25,19 @@ public class AddressService {
 	public AddressDTO insert(@Valid AddressFormDTO addressFormDto) {
 		Customer customer = customerRepository.findById(addressFormDto.getCustomerId()).orElseThrow(
 				() -> new DefaultException("Customer with id " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+		Address newAddress = new Address();
+		newAddress.setStreet(addressFormDto.getStreet());
+		newAddress.setNumber(addressFormDto.getNumber());
+		newAddress.setComplement(addressFormDto.getComplement());
+		newAddress.setDistrict(addressFormDto.getDistrict());
+		newAddress.setCity(addressFormDto.getCity());
+		newAddress.setState(addressFormDto.getState());
+		newAddress.setCep(addressFormDto.getCep());
+		newAddress.setCustomer(customer);	
 		
-		Address address = new Address();
-		address.setStreet(addressFormDto.getStreet());
-		address.setNumber(addressFormDto.getNumber());
-		address.setComplement(addressFormDto.getComplement());
-		address.setDistrict(addressFormDto.getDistrict());
-		address.setCity(addressFormDto.getCity());
-		address.setState(addressFormDto.getState());
-		address.setCep(addressFormDto.getCep());
-		address.setCustomer(customer);	
-		
-		return new AddressDTO(addressRepository.save(address));
+		return new AddressDTO(addressRepository.save(newAddress));
 	}
+
 
 	public AddressDTO update(Long id, @Valid AddressFormDTO addressFormDto) {
 		Address address = addressRepository.findById(id).orElseThrow(

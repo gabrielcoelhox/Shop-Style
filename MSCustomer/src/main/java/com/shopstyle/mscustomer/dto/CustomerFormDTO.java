@@ -19,8 +19,6 @@ import lombok.Getter;
 
 @Getter
 public class CustomerFormDTO {
-	
-	private Long id;
 
 	@NotNull (message = "firstName field cannot be null")
 	@Length(min = 3)
@@ -48,7 +46,7 @@ public class CustomerFormDTO {
 	
 	@NotNull
 	@NotEmpty (message = "password field cannot be empty")
-	@Length(min = 8)
+	@Length(min = 6)
 	private String password;
 	
 	@NotNull
