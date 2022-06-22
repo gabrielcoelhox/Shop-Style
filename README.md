@@ -22,7 +22,7 @@ O Shop Style é uma loja física que vende roupas de todos os tipos e estilos. O
 
 O projeto usará uma arquitetura de micro-serviços. Foi definindo a criação de seis micro-serviços: customer, catalog, payment, order, audit e o bff-shop. Todos os micro-serviços devem ter testes unitários com cobertura de pelo menos 80% e também um swagger correspondente.
 
-![IMG](github/projeto.png)
+![IMG](Github/projeto.png)
 
 <details>
   <summary><strong><a id="id2"> <h1> 👨‍💼 MS Customer </h1></strong></summary>
