@@ -19,7 +19,7 @@ import com.shopstyle.mscatalog.dto.ProductFormDTO;
 import com.shopstyle.mscatalog.services.ProductService;
 
 @RestController
-@RequestMapping(value = "/v1/products")
+@RequestMapping("/v1/products")
 public class ProductController {
 
 	@Autowired
@@ -31,22 +31,22 @@ public class ProductController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
+	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 		return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDTO> insert(@RequestBody ProductFormDTO product){
+	public ResponseEntity<ProductDTO> insert(@RequestBody ProductFormDTO product) {
 		return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductFormDTO product){
+	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductFormDTO product) {
 		return new ResponseEntity<>(productService.update(id, product), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteById(@PathVariable Long id){
+	public ResponseEntity<Void> deleteById(@PathVariable Long id) {
 		productService.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

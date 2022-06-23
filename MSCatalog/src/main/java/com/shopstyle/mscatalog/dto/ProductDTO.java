@@ -1,9 +1,9 @@
 package com.shopstyle.mscatalog.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.shopstyle.mscatalog.entities.Product;
+import com.shopstyle.mscatalog.entities.Sku;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +14,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductDTO {
 
+	private Long id;
 	private String name;
 	private String description;
-	private boolean active;
-	private List<CategoryDTO> categories;
-	private List<VariationDTO> variations;
+	private String brand;
+	private String material;
+	private Boolean active;
+	private List<Sku> skus;
 	
 	public ProductDTO(Product product) {
+		this.id = product.getId();
 		this.name = product.getName();
 		this.description = product.getDescription();
+		this.brand = product.getBrand();
+		this.material = product.getMaterial();
 		this.active = product.isActive();
-		this.categories = product.getCategories().stream().map(CategoryDTO::new).collect(Collectors.toList());
-		this.variations = product.getVariations().stream().map(VariationDTO::new).collect(Collectors.toList());
+		this.skus = product.getSkus();
 	}
 }

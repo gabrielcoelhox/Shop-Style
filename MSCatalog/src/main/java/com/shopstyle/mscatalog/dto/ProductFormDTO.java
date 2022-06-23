@@ -1,6 +1,7 @@
 package com.shopstyle.mscatalog.dto;
 
-import java.util.List;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,20 @@ import lombok.Setter;
 @Setter
 public class ProductFormDTO {
 
+	@NotNull @NotEmpty
 	private String name;
+	
+	@NotNull @NotEmpty
 	private String description;
+	
+	@NotNull @NotEmpty
+	private String brand;
+	
+	private String material;
+	
+	@NotNull
 	private boolean active;
-	private List<Long> category_ids;
+	
+	@NotNull
+	private Long categoryId;
 }
