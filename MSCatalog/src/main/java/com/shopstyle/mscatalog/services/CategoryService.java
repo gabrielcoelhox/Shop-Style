@@ -40,13 +40,13 @@ public class CategoryService {
 
 	public List<ProductDTO> findListProductsById(Long id) {
 		Category category = categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category ID : " + id + " not found."));	
+				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));	
 		return category.getProducts().stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
 	public CategoryDTO update(Long id, @Valid CategoryFormDTO categoryFormDto) {
 		Category category = categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category ID : " + id + " not found."));
+				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));
 		category.setName(categoryFormDto.getName());
 		category.setActive(categoryFormDto.isActive());
 		return new CategoryDTO(categoryRepository.save(category));
@@ -54,7 +54,7 @@ public class CategoryService {
 
 	public void deleteById(Long id) {
 		categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category ID : " + id + " not found."));
+				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));
 		categoryRepository.deleteById(id);	
 	}
 }

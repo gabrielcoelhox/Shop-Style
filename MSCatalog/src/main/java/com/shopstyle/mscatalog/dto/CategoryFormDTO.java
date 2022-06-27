@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 public class CategoryFormDTO {
 
-	@NotNull @NotEmpty
+	@NotNull (message = "name field cannot be null") 
+	@NotEmpty
 	private String name;
 	
 	@NotNull

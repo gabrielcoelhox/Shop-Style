@@ -12,22 +12,24 @@ import lombok.Setter;
 @Setter
 public class SkuFormDTO {
 
-	@NotNull
+	@NotNull (message = "Price field cannot be null")
 	private Double price;
 	
-	@NotNull
+	@NotNull (message = "Quantity field cannot be null")
 	private Integer quantity;
 	
-	@NotNull @NotEmpty
+	@NotNull(message = "Color field cannot be null")
+	@NotEmpty
 	private String color;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Size field cannot be null")
+	@NotEmpty
 	private String size;
 	
-	@NotNull
+	@NotNull (message = "Height field cannot be null")
 	private Integer height;
 	
-	@NotNull
+	@NotNull (message = "Width field cannot be null")
 	private Integer width;
 	
 	@NotNull

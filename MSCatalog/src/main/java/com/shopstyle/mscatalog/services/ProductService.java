@@ -31,13 +31,13 @@ public class ProductService {
 	
 	public ProductDTO findById(Long id) {
 		return new ProductDTO(productRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product ID: " + id + " not found.")));
+				() -> new MethodArgumentNotValidException("Product with ID: " + id + " not found. Enter a valid ID.")));
 	}
 	
 	public ProductDTO save(@Valid ProductFormDTO productFormDto) {
 		
 		Category category = categoryRepository.findById(productFormDto.getCategoryId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category ID: " + productFormDto.getCategoryId() + " not found."));
+				() -> new MethodArgumentNotValidException("Category with ID: " + productFormDto.getCategoryId() + " not found. Enter a valid ID."));
 		Product product = new Product();
 		product.setName(productFormDto.getName());
 		product.setDescription(productFormDto.getDescription());
@@ -49,7 +49,7 @@ public class ProductService {
 			product.setCategory(category);
 			return new ProductDTO(productRepository.save(product));
 		} else {
-			throw new MethodArgumentNotValidException("Não é possível incluir produto nesta categoria.");
+			throw new MethodArgumentNotValidException("Not is possible to add a product to this category.");
 		}
 	}
 	
@@ -57,7 +57,7 @@ public class ProductService {
 		Product product = productRepository.findById(id).orElseThrow(
 				() -> new MethodArgumentNotValidException("Product ID: " + id + " not found."));
 		Category category = categoryRepository.findById(productFormDto.getCategoryId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category ID: " + productFormDto.getCategoryId() + " not found."));
+				() -> new MethodArgumentNotValidException("Category with ID: " + productFormDto.getCategoryId() + " not found. Enter a valid ID."));
 		product.setName(productFormDto.getName());
 		product.setDescription(productFormDto.getDescription());
 		product.setActive(productFormDto.isActive());
@@ -68,7 +68,7 @@ public class ProductService {
 			product.setCategory(category);
 			return new ProductDTO(productRepository.save(product));
 		} else {
-			throw new MethodArgumentNotValidException("Não é possível incluir produto nesta categoria.");
+			throw new MethodArgumentNotValidException("Not is possible to add a product to this category.");
 		}
 	}
 

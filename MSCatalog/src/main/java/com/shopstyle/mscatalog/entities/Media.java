@@ -25,14 +25,14 @@ public class Media {
 	private Long id;
 	
 	@NotNull @NotEmpty
-	private String imagemUrl;
+	private String imageUrl;
 	
 	@ManyToOne
 	@JsonIgnore
 	private Sku sku;
 	
-	public Media(@NotNull @NotEmpty String imagemUrl, Sku sku) {
-		this.imagemUrl = imagemUrl;
+	public Media(@NotNull @NotEmpty String imageUrl, Sku sku) {
+		this.imageUrl = imageUrl;
 		this.sku = sku;
 	}
 }

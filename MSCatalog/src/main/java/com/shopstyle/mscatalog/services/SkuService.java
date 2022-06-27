@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class SkuService {
 
 	public SkuDTO save(@Valid SkuFormDTO skuFormDto) {
 		Product product = productRepository.findById(skuFormDto.getProductId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product ID : " + skuFormDto.getProductId() + " not found."));
+				() -> new MethodArgumentNotValidException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID."));
 		Sku sku = new Sku();
 		sku.setProduct(product);
 		sku.setColor(skuFormDto.getColor());
@@ -58,9 +57,9 @@ public class SkuService {
 
 	public SkuDTO update(Long id, @Valid SkuFormDTO skuFormDto) {
 		Product product = productRepository.findById(skuFormDto.getProductId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product ID : " + skuFormDto.getProductId() + " not found."));
+				() -> new MethodArgumentNotValidException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID."));
 		Sku sku = skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku ID : "+ id + " not found."));
+				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID."));
 		sku.setProduct(product);
 		sku.setColor(skuFormDto.getColor());
 		sku.setColor(skuFormDto.getColor());
@@ -79,7 +78,7 @@ public class SkuService {
 
 	public void deleteById(Long id) {
 		skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku ID : "+ id + " not found."));
+				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID. Enter a valid ID."));
 		skuRepository.deleteById(id);
 	}
 }

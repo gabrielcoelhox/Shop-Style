@@ -18,6 +18,10 @@ import com.shopstyle.mscatalog.dto.SkuDTO;
 import com.shopstyle.mscatalog.dto.SkuFormDTO;
 import com.shopstyle.mscatalog.services.SkuService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/v1/skus")
 public class SkuController {
@@ -27,18 +31,26 @@ public class SkuController {
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<SkuDTO> save(@RequestBody @Valid SkuFormDTO skuForm){
+	@ApiOperation(value = "Insert a new sku")
+	public ResponseEntity<SkuDTO> insert(@RequestBody @Valid SkuFormDTO skuForm){
 		return new ResponseEntity<>(skuService.save(skuForm), HttpStatus.CREATED);
 	}
 	
+	@ApiResponses({
+	      @ApiResponse(code = 200, message = "Update done successfully", response = SkuDTO.class),
+	      @ApiResponse(code = 403, message = "Profile not authorized to perform this operation", response = SkuDTO.class),
+	      @ApiResponse(code = 404, message = "Sku not found", response = SkuDTO.class)
+	})
 	@PutMapping("/{id}")
 	@Transactional
+	@ApiOperation(value = "Update a sku")
 	public ResponseEntity<SkuDTO> update(@PathVariable Long id, @RequestBody @Valid SkuFormDTO skuForm){
 		return new ResponseEntity<>(skuService.update(id, skuForm), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@Transactional
+	@ApiOperation(value = "Delete a sku")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
 		skuService.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

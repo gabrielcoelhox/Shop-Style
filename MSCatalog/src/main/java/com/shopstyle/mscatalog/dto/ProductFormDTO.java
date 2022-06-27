@@ -10,13 +10,15 @@ import lombok.Setter;
 @Setter
 public class ProductFormDTO {
 
-	@NotNull @NotEmpty
+	@NotNull (message = "name field cannot be null")
+	@NotEmpty
 	private String name;
 	
 	@NotNull @NotEmpty
 	private String description;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "brand field cannot be null")
+	@NotEmpty
 	private String brand;
 	
 	private String material;

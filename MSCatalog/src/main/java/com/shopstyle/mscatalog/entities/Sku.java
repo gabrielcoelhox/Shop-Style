@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.print.attribute.standard.Media;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -56,4 +55,8 @@ public class Sku {
 	@OneToMany(mappedBy = "sku", cascade = CascadeType.ALL)
 	@NotNull @NotEmpty
 	private List<Media> images = new ArrayList<>();
+	
+	public void addImages(Media media) {
+		this.images.add(media);
+	}
 }

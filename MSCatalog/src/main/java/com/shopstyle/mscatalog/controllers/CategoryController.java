@@ -22,6 +22,10 @@ import com.shopstyle.mscatalog.dto.CategoryFormDTO;
 import com.shopstyle.mscatalog.dto.ProductDTO;
 import com.shopstyle.mscatalog.services.CategoryService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping(value = "/v1/categories")
 public class CategoryController {
@@ -30,28 +34,38 @@ public class CategoryController {
 	private CategoryService categoryService;
 	
 	@GetMapping
+	@ApiOperation(value = "Find all categories")
 	public ResponseEntity<List<CategoryDTO>> findAll(){
 		return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}/products")
+	@ApiOperation(value = "Find a categorie by id")
 	public ResponseEntity<List<ProductDTO>> findListProductsById(@PathVariable Long id){
 		return new ResponseEntity<>(categoryService.findListProductsById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<CategoryDTO> save(@RequestBody @Valid CategoryFormDTO categoryFormDto){
+	@ApiOperation(value = "Insert a new category")
+	public ResponseEntity<CategoryDTO> insert(@RequestBody @Valid CategoryFormDTO categoryFormDto){
 		return new ResponseEntity<>(categoryService.save(categoryFormDto), HttpStatus.CREATED);
 	}
 	
+	@ApiResponses({
+	      @ApiResponse(code = 200, message = "Update done successfully", response = CategoryDTO.class),
+	      @ApiResponse(code = 403, message = "Profile not authorized to perform this operation", response = CategoryDTO.class),
+	      @ApiResponse(code = 404, message = "Category not found", response = CategoryDTO.class)
+	})
 	@PutMapping("/{id}")
 	@Transactional
+	@ApiOperation(value = "Update a category")
 	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody @Valid CategoryFormDTO categoryFormDto){
 		return new ResponseEntity<>(categoryService.update(id, categoryFormDto), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Delete a category")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
 		categoryService.deleteById(id); 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

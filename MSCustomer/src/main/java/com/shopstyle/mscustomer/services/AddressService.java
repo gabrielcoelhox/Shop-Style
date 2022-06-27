@@ -24,7 +24,7 @@ public class AddressService {
 	
 	public AddressDTO insert(@Valid AddressFormDTO addressFormDto) {
 		Customer customer = customerRepository.findById(addressFormDto.getCustomerId()).orElseThrow(
-				() -> new DefaultException("Customer with id " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+				() -> new DefaultException("Customer with id: " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		Address newAddress = new Address();
 		newAddress.setStreet(addressFormDto.getStreet());
 		newAddress.setNumber(addressFormDto.getNumber());
@@ -37,8 +37,7 @@ public class AddressService {
 		
 		return new AddressDTO(addressRepository.save(newAddress));
 	}
-
-
+	
 	public AddressDTO update(Long id, @Valid AddressFormDTO addressFormDto) {
 		Address address = addressRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Address with id: " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
