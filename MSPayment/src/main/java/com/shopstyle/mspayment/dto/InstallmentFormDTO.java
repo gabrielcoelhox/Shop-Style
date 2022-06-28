@@ -9,11 +9,11 @@ import lombok.Setter;
 @Setter
 public class InstallmentFormDTO {
 
-	@NotNull
+	@NotNull (message = "Amount field cannot be null") 
 	private Integer amount;
 	
 	private String brand;
 	
-	@NotNull
+	@NotNull (message = "PaymentId field cannot be null") 
 	private Long paymentId;
 }

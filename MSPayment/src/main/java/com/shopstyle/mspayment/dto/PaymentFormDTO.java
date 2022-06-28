@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 public class PaymentFormDTO {
 
-	@NotNull @NotEmpty
+	@NotNull (message = "Type field cannot be null") 
+	@NotEmpty
 	private String type;
 	
 	@NotNull

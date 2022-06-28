@@ -40,7 +40,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/{id}/products")
-	@ApiOperation(value = "Find a categorie by id")
+	@ApiOperation(value = "Find a category by id")
 	public ResponseEntity<List<ProductDTO>> findListProductsById(@PathVariable Long id){
 		return new ResponseEntity<>(categoryService.findListProductsById(id), HttpStatus.OK);
 	}
@@ -65,6 +65,7 @@ public class CategoryController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@Transactional
 	@ApiOperation(value = "Delete a category")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
 		categoryService.deleteById(id); 
