@@ -1,0 +1,10 @@
+package com.shopstyle.msorder.enums;
+
+public enum Status {
+
+	PROCESSING_PAYMENT,
+	PAYMENT_NOT_FOUND,
+	PAYMENT_INACTIVE,
+	PAYMENT_NOT_INSTALLMENT,
+	PAYMENT_AMOUNT_NOT_AVAILABLE
+}
