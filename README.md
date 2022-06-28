@@ -1,4 +1,4 @@
-<p align="center"> 💻 Atualizado em 22 de Junho de 2022 💻</p>
+<p align="center"> 💻 Atualizado em 28 de Junho de 2022 💻</p>
 
 <h1 align="center"> 🛒 Shop Style 🛒</h1>
 
@@ -14,7 +14,8 @@
 
 [O Projeto](#id1)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Customer](#id2)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-[MS Catalog](#id3)
+[MS Catalog](#id3)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+[MS Payment](#id4)
 
 # <a id="id1"> 💻 O Projeto </a>
 
@@ -334,6 +335,107 @@ O ms-catalog deve escutar as mensagens enviadas via RabbitMQ pelo ms-order para 
   
 </details>
   
+<details>
+  <summary><strong><a id="id4"> <h1> 💵 MS Payment </h1></strong></summary>
+
+O MS Payment é o responsável por gerenciar todos os métodos de pagamentos disponíveis. O MS Payment possui os seguintes
+endpoints:
+    
+ <details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+# POST - /v1/payments
+# GET - /v1/payments
+# PUT - /v1/payments/:id
+# DELETE - /v1/payments/:id
+
+# POST - /v1/installments
+# PUT - /v1/installments/:id
+# DELETE - /v1/installments/:id
+```
+</details> 
   
+Campos da tabela payments:
+```bash
+ID, TYPE, INSTALLMENTS, ACTIVE
+```  
+Campos da tabela installments::
+```bash
+ID, AMOUNT, BRAND, PAYMENT_ID
+``` 
+#### ❗ Observação
+- O campo ID de todas as tabelas deve ser gerado por auto incremento.
+    
+Exemplo de um payload para cadastrar um método de pagamento:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+{
+"type": "credit card",
+"installments": true,
+"active": true
+}
+``` 
+</details>
+    
+### ☑️ Validações necessárias
+- Todos os campos são obrigatórios.
+    
+Exemplo de um payload para cadastrar a quantidade de parcelas disponíveis naquele método de pagamento:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+{
+"amount": 5,
+"brand": "mastercard"
+"paymentId": 1
+}
+``` 
+</details>
+    
+### ☑️ Validações necessárias
+- O campo brand não é obrigatório.
+- Tem que validar se o installments do paymentId informado é true.
   
+O ms-payment deve escutar as mensagens enviadas via RabbitMQ pelo ms-order com relação ao processamento de pagamento
+de um pedido. Os ms-payment deve processar essa mensagem que possui o seguinte formato:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+{
+  "orderId": "6294d4b66f71221237b4d211",
+  "payment": {
+  "id": 1,
+  "installments": 0
+  }
+}
+``` 
+</details>   
+    
+Depois de realizar o processamento da mensagem o ms-payment deve retornar o resultado, que possui o seguinte formato:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+{
+"orderId": "6294d4b66f71221237b4d211",
+"status": "PAYMENT_SUCCESSFUL"
+}
+``` 
+</details>   
+  
+Os possíveis status que o ms-payment pode enviar para o ms-order são os seguintes:
+- Pagamento realizado com sucesso - *__PAYMENT_SUCCESSFUL__*
+- Pagamento não existe no banco - *__PAYMENT_NOT_FOUND__*
+- Pagamento está inativado - *__PAYMENT_INACTIVE__*
+- Pagamento não aceita parcelamento - *__PAYMENT_NOT_INSTALLMENT__*
+- As parcelas informadas não estão dentro do limite definido - *__PAYMENT_AMOUNT_NOT_AVAILABLE__*
+    
+#### ❗ Observação
+Usar PostgreSQL e RabbitMQ.
+
 [ISO-8601]: https://pt.wikipedia.org/wiki/ISO_8601
