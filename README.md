@@ -15,7 +15,8 @@
 [O Projeto](#id1)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Customer](#id2)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Catalog](#id3)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-[MS Payment](#id4)
+[MS Payment](#id4)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+[MS Order](#id5)
 
 # <a id="id1"> 💻 O Projeto </a>
 
@@ -437,5 +438,70 @@ Os possíveis status que o ms-payment pode enviar para o ms-order são os seguin
     
 #### ❗ Observação
 Usar PostgreSQL e RabbitMQ.
+</details>
+  
+<details>
+  <summary><strong><a id="id5"> <h1> 📄 MS Order </h1></strong></summary>
 
+O MS Order é o responsável por gerenciar todos os pedidos de compra realizadas na aplicação. O MS Order possui os seguintes endpoints:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+# POST - /v1/orders
+# GET - /v1/orders
+# GET - /v1/orders/customers/:customerId
+```
+</details> 
+    
+Campos da coleção orders:
+```bash
+ID, CUSTOMER, PAYMENT, CART, DATE, STATUS, TOTAL
+```  
+Exemplo de um payload para criar um pedido:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+{
+  "customer": {
+    "id": 1,
+    "addressId": 1
+  },
+  "payment": {
+    "id": 1,
+    "installments": 0
+  },
+  "cart": [
+    {
+      "skuId": 1,
+      "quantity": 1
+    },
+    {
+      "skuId": 2,
+      "quantity": 5
+    }
+  ]
+}
+``` 
+</details>
+    
+### ☑️ Validações necessárias
+- Todos os campos são obrigatórios.
+- Dado o valor *__id__* e *__addressId__* que está dentro do objeto *__customer__* , o ms-order deve se comunicar com o ms-customer para saber se esse usuário existe, se está ativo e se o endereço informado realmente existe, caso não deve retornar um erro.
+- Dado o valor *__skuId__* e *__quantity__* que estão dentro do objeto cart , os ms-order deve se comunicar com o ms-catalog para saber se existe essa sku e se tem disponível no estoque a quantidade solicitada, caso não atenda algum dos dois critérios deve retornar um erro.
+    
+Após realizar a inserção do documento, deve ser feito uma comunicação com o ms-payment para processar o pagamento desse pedido e o mesmo deve escutar o resultado enviado pelo ms-payment para atualizar o status do pedido no banco. Se o pagamento foi processado com sucesso, o ms-order deve enviar uma mensagem para o ms-catalog diminuir o estoque das skus do pedido.
+
+#### ❗ Observações
+- Usar o MongoDB
+- Na hora da inserção do documento na coleção deve ser calculado o total da compra, a partir do objeto *__cart__* é possível fazer esse calculo, assim como inserir a data e a hora que ocorreu a compra. O campo *__status__* deve ser salvo com o valor inicial de *__PROCESSING_PAYMENT__*.
+- O endpoint *__GET - /v1/orders__* necessita de três query param, sendo que um é obrigatório. O query param obrigatório é o *__startDate__* que informa a partir de qual data que deseja filtrar os pedidos realizados, o segundo query param é o *__endDate__* que usado em conjunto com o *__startDate__* define um intervalo de tempo dos pedidos realizados. O ultimo query param é o *__status__* para filtrar os pedidos a partir do seu status.
+- O endpoint *__GET - /v1/orders/customers/:customerId__* necessita de três query param, mas nenhum é obrigatório. O query param *__startDate__* informa a partir de qual data que deseja filtrar os pedidos realizados, o segundo query param é o *__endDate__* que usado em conjunto com o *__startDate__* define um intervalo de tempo dos pedidos realizados. O ultimo query param é o *__status__* para filtrar os pedidos a partir do seu status.
+    
+    
+    
+    
+    
+    
 [ISO-8601]: https://pt.wikipedia.org/wiki/ISO_8601
