@@ -1,4 +1,4 @@
-package com.shopstyle.mscustomer.enums;
+package com.shopstyle.msorder.clients.enums;
 
 public enum State {
 
