@@ -10,13 +10,11 @@ import javax.validation.constraints.NotNull;
 
 import com.shopstyle.mspayment.dto.InstallmentFormDTO;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Installment {
 
@@ -33,9 +31,9 @@ public class Installment {
 	@JoinColumn(name = "payment_id")
 	private Payment payment;
 	
-	public Installment(InstallmentFormDTO installmentForm, Payment payment) {
-		this.amount = installmentForm.getAmount();
-		this.brand = installmentForm.getBrand();
+	public Installment(InstallmentFormDTO form, Payment payment) {
+		this.amount = form.getAmount();
+		this.brand = form.getBrand();
 		this.payment = payment;
 	}
 }

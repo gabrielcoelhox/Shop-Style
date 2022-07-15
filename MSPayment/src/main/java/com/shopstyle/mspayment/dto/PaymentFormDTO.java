@@ -3,11 +3,11 @@ package com.shopstyle.mspayment.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class PaymentFormDTO {
 
 	@NotNull (message = "Type field cannot be null") 

@@ -9,12 +9,12 @@ import javax.validation.constraints.NotNull;
 
 import com.shopstyle.mspayment.dto.PaymentFormDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Payment {
 
 	@Id
@@ -30,9 +30,9 @@ public class Payment {
 	@NotNull
 	private boolean installments;
 	
-	public Payment(PaymentFormDTO paymentFormDto) {
-		this.type = paymentFormDto.getType();
-		this.active = paymentFormDto.isActive();
-		this.installments = paymentFormDto.isInstallments();
+	public Payment(PaymentFormDTO form) {
+		this.type = form.getType();
+		this.active = form.isActive();
+		this.installments = form.isInstallments();
 	}
 }

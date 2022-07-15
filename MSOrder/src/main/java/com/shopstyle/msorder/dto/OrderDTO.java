@@ -11,12 +11,10 @@ import com.shopstyle.msorder.clients.dto.Sku;
 import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class OrderDTO {
 

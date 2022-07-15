@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.msorder.clients.CatalogClientFeign;
@@ -24,20 +25,27 @@ import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
 import com.shopstyle.msorder.repository.OrderRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-	@Autowired
-	private CatalogClientFeign catalogClient;
+	private final CatalogClientFeign catalogClient;
+
+	private final PaymentClientFeign paymentClient;
+
+	private final CustomerClientFeign customerClient;
+
+	private final OrderRepository orderRepository;
 	
-	@Autowired
-	private PaymentClientFeign paymentClient;
+	private final RabbitTemplate rabbitTemplate;
 	
-	@Autowired
-	private CustomerClientFeign customerClient;
+	@Value("${mq.queues.sku-order}")
+	private String queueSkuOrder;
 	
-	@Autowired
-	private OrderRepository orderRepository;
+	@Value("${mq.queues.payment-order}")
+	private String queuePaymentOrder;
 	
 	public List<OrderDTO> findAll() {
 		return orderRepository.findAll().stream().map(OrderDTO::new).collect(Collectors.toList());
@@ -87,5 +95,4 @@ public class OrderService {
 		order.setTotal(total);
 		return new OrderDTO(orderRepository.save(order));
 	}
-	
 }

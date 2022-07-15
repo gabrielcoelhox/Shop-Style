@@ -3,12 +3,10 @@ package com.shopstyle.mspayment.dto;
 import com.shopstyle.mspayment.entities.Installment;
 import com.shopstyle.mspayment.entities.Payment;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class InstallmentDTO {
 

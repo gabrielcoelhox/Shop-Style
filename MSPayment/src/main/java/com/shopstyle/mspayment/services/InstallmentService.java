@@ -2,7 +2,6 @@ package com.shopstyle.mspayment.services;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mspayment.dto.InstallmentDTO;
@@ -13,34 +12,35 @@ import com.shopstyle.mspayment.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mspayment.repository.InstallmentRepository;
 import com.shopstyle.mspayment.repository.PaymentRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class InstallmentService {
 
-	@Autowired
-	private InstallmentRepository installmentRepository;
-	
-	@Autowired
-	private PaymentRepository paymentRepository;
+	private final InstallmentRepository installmentRepository;
 
-	public InstallmentDTO insert(@Valid InstallmentFormDTO installmentForm) {
-		Payment payment = paymentRepository.findById(installmentForm.getPaymentId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Payment with ID: " + installmentForm.getPaymentId() + " not found. Enter a valid ID."));
+	private final PaymentRepository paymentRepository;
+
+	public InstallmentDTO insert(@Valid InstallmentFormDTO form) {
+		Payment payment = paymentRepository.findById(form.getPaymentId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Payment with ID: " + form.getPaymentId() + " not found. Enter a valid ID."));
 		
 		if(payment.isActive() && payment.isInstallments()) {
-			return new InstallmentDTO(installmentRepository.save(new Installment(installmentForm, payment)));
+			return new InstallmentDTO(installmentRepository.save(new Installment(form, payment)));
 		} else {
 			throw new MethodArgumentNotValidException("The payment method chosen is not valid.");
 		}	
 	}
 
-	public InstallmentDTO update(Long id, @Valid InstallmentFormDTO installmentForm) {
+	public InstallmentDTO update(Long id, @Valid InstallmentFormDTO form) {
 		Installment installment = installmentRepository.findById(id).orElseThrow(
 				() -> new MethodArgumentNotValidException("Installment with ID: " + id + " not found. Enter a valid ID."));
-		Payment payment = paymentRepository.findById(installmentForm.getPaymentId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Payment with ID " + installmentForm.getPaymentId() + " not found. Enter a valid ID."));
+		Payment payment = paymentRepository.findById(form.getPaymentId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Payment with ID " + form.getPaymentId() + " not found. Enter a valid ID."));
 		installment.setPayment(payment);
-		installment.setAmount(installmentForm.getAmount());
-		installment.setBrand(installmentForm.getBrand());
+		installment.setAmount(form.getAmount());
+		installment.setBrand(form.getBrand());
 		return new InstallmentDTO(installment);
 	}
 

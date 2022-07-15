@@ -1,4 +1,4 @@
-package com.shopstyle.mscatalog.exceptions;
+package com.shopstyle.msorder.exceptions;
 
 import java.time.Instant;
 

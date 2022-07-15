@@ -14,13 +14,11 @@ import com.shopstyle.msorder.clients.dto.Payment;
 import com.shopstyle.msorder.clients.dto.Sku;
 import com.shopstyle.msorder.enums.Status;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Document
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Order {
 

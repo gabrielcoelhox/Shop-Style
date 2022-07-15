@@ -2,11 +2,11 @@ package com.shopstyle.mspayment.dto;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class InstallmentFormDTO {
 
 	@NotNull (message = "Amount field cannot be null") 
