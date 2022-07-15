@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mscatalog.dto.ProductDTO;
@@ -16,14 +15,15 @@ import com.shopstyle.mscatalog.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscatalog.repository.CategoryRepository;
 import com.shopstyle.mscatalog.repository.ProductRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-	@Autowired
-	private ProductRepository productRepository;
+	private final ProductRepository productRepository;
 	
-	@Autowired
-	private CategoryRepository categoryRepository;
+	private final CategoryRepository categoryRepository;
 	
 	public List<ProductDTO> findAll() {
 		return productRepository.findAll().stream().map(ProductDTO::new).collect(Collectors.toList());
@@ -34,35 +34,29 @@ public class ProductService {
 				() -> new MethodArgumentNotValidException("Product with ID: " + id + " not found. Enter a valid ID.")));
 	}
 	
-	public ProductDTO save(@Valid ProductFormDTO productFormDto) {
+	public ProductDTO save(@Valid ProductFormDTO form) {
 		
-		Category category = categoryRepository.findById(productFormDto.getCategoryId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category with ID: " + productFormDto.getCategoryId() + " not found. Enter a valid ID."));
-		Product product = new Product();
-		product.setName(productFormDto.getName());
-		product.setDescription(productFormDto.getDescription());
-		product.setActive(productFormDto.isActive());
-		product.setBrand(productFormDto.getBrand());
-		product.setMaterial(productFormDto.getMaterial());
+		Category category = categoryRepository.findById(form.getCategoryId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Category with ID: " + form.getCategoryId() + " not found. Enter a valid ID."));
 
 		if(category.isActive() && category.getChildren().isEmpty()) {
-			product.setCategory(category);
-			return new ProductDTO(productRepository.save(product));
+			return new ProductDTO(productRepository.save(new Product(form, category)));
 		} else {
 			throw new MethodArgumentNotValidException("Not is possible to add a product to this category.");
 		}
 	}
 	
-	public ProductDTO update(Long id, @Valid ProductFormDTO productFormDto) {
+	public ProductDTO update(Long id, @Valid ProductFormDTO form) {
 		Product product = productRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product ID: " + id + " not found."));
-		Category category = categoryRepository.findById(productFormDto.getCategoryId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category with ID: " + productFormDto.getCategoryId() + " not found. Enter a valid ID."));
-		product.setName(productFormDto.getName());
-		product.setDescription(productFormDto.getDescription());
-		product.setActive(productFormDto.isActive());
-		product.setBrand(productFormDto.getBrand());
-		product.setMaterial(productFormDto.getMaterial());
+				() -> new MethodArgumentNotValidException("Product with ID: " + id + " not found."));
+		Category category = categoryRepository.findById(form.getCategoryId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Category with ID: " + form.getCategoryId() + " not found. Enter a valid ID."));
+		
+		product.setName(form.getName());
+		product.setDescription(form.getDescription());
+		product.setActive(form.isActive());
+		product.setBrand(form.getBrand());
+		product.setMaterial(form.getMaterial());
 		
 		if(category.isActive() && category.getChildren().isEmpty()) {
 			product.setCategory(category);

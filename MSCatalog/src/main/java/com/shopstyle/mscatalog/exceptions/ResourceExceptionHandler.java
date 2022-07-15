@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@RestControllerAdvice
 public class ResourceExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> objectNotFound(MethodArgumentNotValidException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> objectNotFound(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.NOT_FOUND.value());
@@ -24,7 +26,7 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> invalidFields(MethodArgumentNotValidException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> invalidFields(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -35,7 +37,7 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<StandardError> invalidFields(HttpMessageNotReadableException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> invalidFields(HttpMessageNotReadableException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -46,7 +48,7 @@ public class ResourceExceptionHandler {
 	}	
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> categoryNotValid(MethodArgumentNotValidException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> categoryNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());

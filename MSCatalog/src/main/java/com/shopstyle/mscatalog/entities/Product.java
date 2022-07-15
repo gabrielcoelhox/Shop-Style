@@ -1,5 +1,6 @@
 package com.shopstyle.mscatalog.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,14 +14,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shopstyle.mscatalog.dto.ProductFormDTO;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Product {
 	
@@ -28,13 +28,16 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Name field cannot be null")
+	@NotEmpty (message = "Name field cannot be empty")
 	private String name;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Description field cannot be null")
+	@NotEmpty (message = "Description field cannot be empty")
 	private String description;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Brand field cannot be null")
+	@NotEmpty (message = "Brand field cannot be empty")
 	private String brand;
 	
 	private String material;
@@ -44,10 +47,19 @@ public class Product {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
-	private List<Sku> skus;
+	private List<Sku> skus = new ArrayList<>();
 	
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "category_id")
 	private Category category;
+	
+	public Product(ProductFormDTO form, Category category) {
+		this.name = form.getName();
+		this.description = form.getDescription();
+		this.brand = form.getBrand();
+		this.material = form.getMaterial();
+		this.active = form.isActive();
+		this.category = category;
+	}
 }

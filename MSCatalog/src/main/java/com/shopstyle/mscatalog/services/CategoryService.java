@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mscatalog.dto.CategoryDTO;
@@ -15,23 +14,21 @@ import com.shopstyle.mscatalog.entities.Category;
 import com.shopstyle.mscatalog.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscatalog.repository.CategoryRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
-	@Autowired
-	private CategoryRepository categoryRepository;
+	private final CategoryRepository categoryRepository;
 
-	public CategoryDTO save(@Valid CategoryFormDTO categoryFormDto) {
-		Category category = new Category();
-		Category parentCategory = categoryRepository.findById(categoryFormDto.getParentId()).orElse(null);
-		category.setName(categoryFormDto.getName());
-		category.setActive(categoryFormDto.isActive());
-		categoryRepository.save(category);
+	public CategoryDTO save(@Valid CategoryFormDTO form) {
+		Category parentCategory = categoryRepository.findById(form.getParentId()).orElse(null);
+		Category saveCategory = categoryRepository.save(new Category(form, parentCategory));
 		if(parentCategory != null) {
-			category.setParent(parentCategory);
-			parentCategory.addChildren(category);
+			parentCategory.addChildren(saveCategory);
 		}
-		return new CategoryDTO(category);
+		return new CategoryDTO(saveCategory);
 	}
 
 	public List<CategoryDTO> findAll() {
@@ -44,11 +41,11 @@ public class CategoryService {
 		return category.getProducts().stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
-	public CategoryDTO update(Long id, @Valid CategoryFormDTO categoryFormDto) {
+	public CategoryDTO update(Long id, @Valid CategoryFormDTO form) {
 		Category category = categoryRepository.findById(id).orElseThrow(
 				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));
-		category.setName(categoryFormDto.getName());
-		category.setActive(categoryFormDto.isActive());
+		category.setName(form.getName());
+		category.setActive(form.isActive());
 		return new CategoryDTO(categoryRepository.save(category));
 	}
 

@@ -1,16 +1,14 @@
 package com.shopstyle.mscatalog.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.shopstyle.mscatalog.entities.Product;
-import com.shopstyle.mscatalog.entities.Sku;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class ProductDTO {
 
@@ -19,8 +17,8 @@ public class ProductDTO {
 	private String description;
 	private String brand;
 	private String material;
-	private Boolean active;
-	private List<Sku> skus;
+	private boolean active;
+	private List<SkuDTO> skus;
 	
 	public ProductDTO(Product product) {
 		this.id = product.getId();
@@ -29,6 +27,6 @@ public class ProductDTO {
 		this.brand = product.getBrand();
 		this.material = product.getMaterial();
 		this.active = product.isActive();
-		this.skus = product.getSkus();
+		this.skus = product.getSkus().stream().map(SkuDTO::new).collect(Collectors.toList());
 	}
 }

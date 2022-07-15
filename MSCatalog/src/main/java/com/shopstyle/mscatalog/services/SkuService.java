@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mscatalog.dto.SkuDTO;
@@ -18,35 +17,33 @@ import com.shopstyle.mscatalog.repository.MediaRepository;
 import com.shopstyle.mscatalog.repository.ProductRepository;
 import com.shopstyle.mscatalog.repository.SkuRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class SkuService {
 
-	@Autowired
-	private SkuRepository skuRepository;
+	private final SkuRepository skuRepository;
 	
-	@Autowired
-	private ProductRepository productRepository;
+	private final ProductRepository productRepository;
 	
-	@Autowired
-	private MediaRepository mediaRepository;
+	private final MediaRepository mediaRepository;
 
 	public List<SkuDTO> findAll() {
 		return skuRepository.findAll().stream().map(SkuDTO::new).collect(Collectors.toList());
 	}
+	
+	public SkuDTO findById(Long id) {
+		return new SkuDTO(skuRepository.findById(id).orElseThrow(
+				() -> new MethodArgumentNotValidException("Sku with ID : "+ id + " not found.")));
+	}
 
-	public SkuDTO save(@Valid SkuFormDTO skuFormDto) {
-		Product product = productRepository.findById(skuFormDto.getProductId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID."));
-		Sku sku = new Sku();
-		sku.setProduct(product);
-		sku.setColor(skuFormDto.getColor());
-		sku.setPrice(skuFormDto.getPrice());
-		sku.setQuantity(skuFormDto.getQuantity());
-		sku.setSize(skuFormDto.getSize());	
-		sku.setHeight(skuFormDto.getHeight());
-		sku.setWidth(skuFormDto.getWidth());
+	public SkuDTO save(@Valid SkuFormDTO form) {
+		Product product = productRepository.findById(form.getProductId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Product with ID: " + form.getProductId() + " not found. Enter a valid ID."));
 		
-		for(String imagemUrl : skuFormDto.getImages()) {
+		Sku sku = new Sku(form, product);	
+		for(String imagemUrl : form.getImages()) {
 			Media media = new Media(imagemUrl, sku);
 			sku.addImages(media);
 			mediaRepository.save(media);
@@ -60,6 +57,7 @@ public class SkuService {
 				() -> new MethodArgumentNotValidException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID."));
 		Sku sku = skuRepository.findById(id).orElseThrow(
 				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID."));
+		
 		sku.setProduct(product);
 		sku.setColor(skuFormDto.getColor());
 		sku.setColor(skuFormDto.getColor());
@@ -71,8 +69,7 @@ public class SkuService {
 		
 		for(String imagemUrl : skuFormDto.getImages()) {
 			mediaRepository.save(new Media(imagemUrl, sku));
-		}
-				
+		}	
 		return new SkuDTO(skuRepository.save(sku));
 	}
 

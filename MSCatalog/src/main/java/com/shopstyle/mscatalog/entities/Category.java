@@ -15,20 +15,22 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shopstyle.mscatalog.dto.CategoryFormDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Name field cannot be null")
+	@NotEmpty
 	private String name;
 	
 	@NotNull
@@ -48,5 +50,11 @@ public class Category {
 	
 	public void addChildren(Category category) {
 		this.children.add(category);
+	}
+	
+	public Category(CategoryFormDTO category, Category parentCategory) {
+		this.name = category.getName();
+		this.active = category.isActive();
+		this.parent = parentCategory;
 	}
 }

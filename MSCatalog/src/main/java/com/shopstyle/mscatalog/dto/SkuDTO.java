@@ -5,12 +5,10 @@ import java.util.List;
 import com.shopstyle.mscatalog.entities.Media;
 import com.shopstyle.mscatalog.entities.Sku;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class SkuDTO {
 

@@ -15,35 +15,38 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shopstyle.mscatalog.dto.SkuFormDTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Sku {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	@NotNull (message = "Price field cannot be null")
 	private Double price;
 	
-	@NotNull
+	@NotNull (message = "Quantity field cannot be null")
 	private Integer quantity;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Color field cannot be null")
+	@NotEmpty
 	private String color;
 	
-	@NotNull @NotEmpty
+	@NotNull (message = "Size field cannot be null")
+	@NotEmpty
 	private String size;
 	
-	@NotNull
+	@NotNull (message = "Height field cannot be null")
 	private Integer height;
 	
-	@NotNull 
+	@NotNull (message = "Width field cannot be null")
 	private Integer width;
 	
 	@NotNull
@@ -58,5 +61,15 @@ public class Sku {
 	
 	public void addImages(Media media) {
 		this.images.add(media);
+	}
+	
+	public Sku(SkuFormDTO form, Product product) {
+		this.price = form.getPrice();
+		this.quantity = form.getQuantity();
+		this.color = form.getColor();
+		this.size = form.getSize();
+		this.height = form.getHeight();
+		this.width = form.getWidth();
+		this.product = product;
 	}
 }
