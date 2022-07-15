@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 	
@@ -45,13 +45,13 @@ public class CustomerController {
 	}
 	
 	@ApiOperation(value= "Returns a unique user by id")	
-	@GetMapping("/customers/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<CustomerDTO> findById(@PathVariable Long id) {
 		return new ResponseEntity<>(customerService.findById(id), HttpStatus.OK);
 	}
 	
 	@Transactional
-	@PostMapping("/customers")
+	@PostMapping
 	@ApiOperation(value = "Insert a new Customer")
 	public ResponseEntity<CustomerDTO> insert(@RequestBody @Valid CustomerFormDTO customerFormDto) {
 		return new ResponseEntity<>(customerService.insert(customerFormDto), HttpStatus.CREATED);
@@ -64,7 +64,7 @@ public class CustomerController {
 	      @ApiResponse(code = 404, message = "Customer not found", response = CustomerDTO.class)
 	})
 	@Transactional
-	@PutMapping("/customers/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomerFormDTO customerFormDto, @PathVariable Long id) {
 		return new ResponseEntity<>(customerService.update(customerFormDto, id), HttpStatus.OK);
 	}
@@ -75,7 +75,7 @@ public class CustomerController {
 	}
 	
 	@Transactional
-	@PutMapping("/customers/{id}/password")
+	@PutMapping("/{id}/password")
 	public ResponseEntity<CustomerDTO> changePassword(@RequestBody @Valid CustomerChangePasswordDTO passwordDto, @PathVariable Long id) {
 		return new ResponseEntity<>(customerService.changePassword(passwordDto, id), HttpStatus.ACCEPTED);
 	}
