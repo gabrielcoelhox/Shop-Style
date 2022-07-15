@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,13 +22,21 @@ import com.shopstyle.mscustomer.services.AddressService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/v1/address")
+@RequiredArgsConstructor
 public class AddressController {
 
 	@Autowired
-	private AddressService addressService;
+	private final AddressService addressService;
+	
+	@GetMapping("/{id}")
+	@ApiOperation(value= "Returns a unique address by id")	
+	public ResponseEntity<AddressDTO> findById(@PathVariable Long id){
+		return new ResponseEntity<>(addressService.findById(id), HttpStatus.OK);
+	}
 	
 	@Transactional
 	@PostMapping

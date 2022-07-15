@@ -16,8 +16,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shopstyle.mscustomer.enums.Sex;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CustomerFormDTO {
 
 	@NotNull (message = "firstName field cannot be null")

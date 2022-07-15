@@ -6,7 +6,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +19,13 @@ import com.shopstyle.mscustomer.exceptions.InvalidPasswordException;
 import com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscustomer.repository.CustomerRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 	
-	@Autowired
-	private CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 	
 	@Transactional
 	public List<CustomerDTO> findAll() {
@@ -85,11 +86,11 @@ public class CustomerService {
 		throw new MethodArgumentNotValidException("Any of the data entered is incorrect.");
 	}
 	
-	private Boolean verificationPassword(Customer customerPassword, CustomerChangePasswordDTO passwordDto) {
-		if(new BCryptPasswordEncoder().matches(passwordDto.getOldPassword(), customerPassword.getPassword())
-				&& passwordDto.getCpf().equals(customerPassword.getCpf())
-				&& passwordDto.getEmail().equals(customerPassword.getEmail())
-				&& passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
+	private Boolean verificationPassword(Customer customerPassword, CustomerChangePasswordDTO passwordDTO) {
+		if(new BCryptPasswordEncoder().matches(passwordDTO.getOldPassword(), customerPassword.getPassword())
+				&& passwordDTO.getCpf().equals(customerPassword.getCpf())
+				&& passwordDTO.getEmail().equals(customerPassword.getEmail())
+				&& passwordDTO.getNewPassword().equals(passwordDTO.getConfirmNewPassword())) {
 			return true;
 		}
 		return false;

@@ -15,15 +15,16 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shopstyle.mscustomer.dto.AddressFormDTO;
 import com.shopstyle.mscustomer.enums.State;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_address")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Address {
 	
 	@Id
@@ -57,4 +58,14 @@ public class Address {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
+	public Address(AddressFormDTO form, Customer customer) {
+		this.street = form.getStreet();
+		this.number = form.getNumber();
+		this.complement = form.getComplement();
+		this.district = form.getDistrict();
+		this.city = form.getCity();
+		this.state = form.getState();
+		this.cep = form.getCep();
+		this.customer = customer;
+	}
 }

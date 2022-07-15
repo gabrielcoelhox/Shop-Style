@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -25,17 +24,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.enums.Sex;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_customer")
-@Builder
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Customer {
 
 	@Id
@@ -53,6 +48,7 @@ public class Customer {
 	private Sex sex;
 	
 	@CPF
+	@NotNull
 	private String cpf;
 	
 	@NotNull
@@ -63,7 +59,7 @@ public class Customer {
 	@Column(unique = true)
 	private String email;
 	
-	@NotNull @NotEmpty
+	@NotNull
 	@Length(min = 6)
 	private String password;
 	
@@ -71,16 +67,16 @@ public class Customer {
 	private boolean active;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-	private List<Address> adresses;
+	private List<Address> addresses;
 	
-	public Customer(CustomerFormDTO customerFormDTO) {
-		this.firstName = customerFormDTO.getFirstName();
-		this.lastName = customerFormDTO.getLastName();
-		this.sex = customerFormDTO.getSex();
-		this.cpf = customerFormDTO.getCpf();
-		this.birthDate = customerFormDTO.getBirthdate();
-		this.email = customerFormDTO.getEmail();
-		this.password = new BCryptPasswordEncoder().encode(customerFormDTO.getPassword());
-		this.active = customerFormDTO.isActive();
+	public Customer(CustomerFormDTO form) {
+		this.firstName = form.getFirstName();
+		this.lastName = form.getLastName();
+		this.sex = form.getSex();
+		this.cpf = form.getCpf();
+		this.birthDate = form.getBirthdate();
+		this.email = form.getEmail();
+		this.password = new BCryptPasswordEncoder().encode(form.getPassword());
+		this.active = form.isActive();
 	}
 }

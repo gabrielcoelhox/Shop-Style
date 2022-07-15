@@ -8,10 +8,12 @@ import javax.validation.constraints.NotNull;
 import com.shopstyle.mscustomer.enums.State;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class AddressFormDTO {
 
 	@NotNull (message = "State field cannot be null")

@@ -1,5 +1,6 @@
 package com.shopstyle.mscustomer.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.shopstyle.mscustomer.entities.Address;
 import com.shopstyle.mscustomer.enums.State;
 
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AddressDTO {
 
 	private Long id;
@@ -20,7 +22,6 @@ public class AddressDTO {
 	private String number;
 	private String complement;
 	private String cep;
-	private CustomerDTO customerDto;
 	
 	public AddressDTO(Address address) {
 		this.id = address.getId();
@@ -30,7 +31,6 @@ public class AddressDTO {
 		this.district = address.getDistrict();
 		this.city = address.getCity();
 		this.state = address.getState();
-		this.cep = address.getCep();	
-		this.customerDto = new CustomerDTO(address.getCustomer());
+		this.cep = address.getCep();
 	}	
 }

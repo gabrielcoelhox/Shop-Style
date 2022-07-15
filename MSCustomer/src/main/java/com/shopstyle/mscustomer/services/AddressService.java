@@ -2,7 +2,6 @@ package com.shopstyle.mscustomer.services;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopstyle.mscustomer.dto.AddressDTO;
@@ -13,41 +12,38 @@ import com.shopstyle.mscustomer.exceptions.DefaultException;
 import com.shopstyle.mscustomer.repository.AddressRepository;
 import com.shopstyle.mscustomer.repository.CustomerRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AddressService {
 
-	@Autowired
-	private AddressRepository addressRepository;
+	private final AddressRepository addressRepository;
 	
-	@Autowired
-	private CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 	
-	public AddressDTO insert(@Valid AddressFormDTO addressFormDto) {
-		Customer customer = customerRepository.findById(addressFormDto.getCustomerId()).orElseThrow(
-				() -> new DefaultException("Customer with id: " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
-		Address newAddress = new Address();
-		newAddress.setStreet(addressFormDto.getStreet());
-		newAddress.setNumber(addressFormDto.getNumber());
-		newAddress.setComplement(addressFormDto.getComplement());
-		newAddress.setDistrict(addressFormDto.getDistrict());
-		newAddress.setCity(addressFormDto.getCity());
-		newAddress.setState(addressFormDto.getState());
-		newAddress.setCep(addressFormDto.getCep());
-		newAddress.setCustomer(customer);	
-		
-		return new AddressDTO(addressRepository.save(newAddress));
+	public AddressDTO findById(Long id) {
+		return new AddressDTO(addressRepository.findById(id).orElseThrow(
+				() -> new DefaultException("Address with Id: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404)));
 	}
 	
-	public AddressDTO update(Long id, @Valid AddressFormDTO addressFormDto) {
+	public AddressDTO insert(@Valid AddressFormDTO form) {
+		Customer customer = customerRepository.findById(form.getCustomerId()).orElseThrow(
+				() -> new DefaultException("Customer with id: " + form.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+		
+		return new AddressDTO(addressRepository.save(new Address(form, customer)));
+	}
+	
+	public AddressDTO update(Long id, @Valid AddressFormDTO form) {
 		Address address = addressRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Address with id: " + addressFormDto.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
-		address.setStreet(addressFormDto.getStreet());
-		address.setNumber(addressFormDto.getNumber());
-		address.setComplement(addressFormDto.getComplement());
-		address.setDistrict(addressFormDto.getDistrict());
-		address.setCity(addressFormDto.getCity());
-		address.setState(addressFormDto.getState());
-		address.setCep(addressFormDto.getCep());
+				() -> new DefaultException("Address with id: " + form.getCustomerId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+		address.setStreet(form.getStreet());
+		address.setNumber(form.getNumber());
+		address.setComplement(form.getComplement());
+		address.setDistrict(form.getDistrict());
+		address.setCity(form.getCity());
+		address.setState(form.getState());
+		address.setCep(form.getCep());
 		
 		return new AddressDTO(addressRepository.save(address));
 	}
