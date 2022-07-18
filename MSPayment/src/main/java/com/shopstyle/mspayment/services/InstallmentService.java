@@ -8,6 +8,7 @@ import com.shopstyle.mspayment.dto.InstallmentDTO;
 import com.shopstyle.mspayment.dto.InstallmentFormDTO;
 import com.shopstyle.mspayment.entities.Installment;
 import com.shopstyle.mspayment.entities.Payment;
+import com.shopstyle.mspayment.exceptions.DefaultException;
 import com.shopstyle.mspayment.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mspayment.repository.InstallmentRepository;
 import com.shopstyle.mspayment.repository.PaymentRepository;
@@ -24,7 +25,7 @@ public class InstallmentService {
 
 	public InstallmentDTO insert(@Valid InstallmentFormDTO form) {
 		Payment payment = paymentRepository.findById(form.getPaymentId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Payment with ID: " + form.getPaymentId() + " not found. Enter a valid ID."));
+				() -> new DefaultException("Payment with ID: " + form.getPaymentId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		
 		if(payment.isActive() && payment.isInstallments()) {
 			return new InstallmentDTO(installmentRepository.save(new Installment(form, payment)));
@@ -35,9 +36,9 @@ public class InstallmentService {
 
 	public InstallmentDTO update(Long id, @Valid InstallmentFormDTO form) {
 		Installment installment = installmentRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Installment with ID: " + id + " not found. Enter a valid ID."));
+				() -> new DefaultException("Installment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		Payment payment = paymentRepository.findById(form.getPaymentId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Payment with ID " + form.getPaymentId() + " not found. Enter a valid ID."));
+				() -> new DefaultException("Payment with ID " + form.getPaymentId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		installment.setPayment(payment);
 		installment.setAmount(form.getAmount());
 		installment.setBrand(form.getBrand());
@@ -46,7 +47,7 @@ public class InstallmentService {
 
 	public void deleteById(Long id) {
 		installmentRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Installment with ID: " + id + " not found. Enter a valid ID."));
+				() -> new DefaultException("Installment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		installmentRepository.deleteById(id);
 	}
 }

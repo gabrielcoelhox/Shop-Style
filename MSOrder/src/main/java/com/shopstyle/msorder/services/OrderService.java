@@ -24,6 +24,7 @@ import com.shopstyle.msorder.dto.OrderFormDTO;
 import com.shopstyle.msorder.dto.PaymentDTO;
 import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
+import com.shopstyle.msorder.exceptions.DefaultException;
 import com.shopstyle.msorder.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.msorder.rabbitmq.consumer.PaymentOrderStatus;
 import com.shopstyle.msorder.rabbitmq.entities.PaymentOrder;
@@ -88,7 +89,7 @@ public class OrderService {
 			if(sku.getQuantity() >= cartDto.getQuantity()) {
 				sku.setQuantity(cartDto.getQuantity());
 			} else {
-				throw new QuantityUnavailableException("Quantity unavailable Sku ID: " + sku.getId());
+				throw new MethodArgumentNotValidException("Quantity unavailable Sku ID: " + sku.getId());
 			}
 			cart.add(sku);
 			total += (sku.getPrice() * cartDto.getQuantity());
@@ -111,7 +112,7 @@ public class OrderService {
 	
 	public OrderDTO updateStatusPayment(PaymentOrderStatus orderStatus) {
 		Order order = orderRepository.findById(orderStatus.getOrderId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Order with ID: " + orderStatus.getOrderId() + " not found."));
+				() -> new DefaultException("Order with ID: " + orderStatus.getOrderId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		order.setStatus(orderStatus.getStatus());
 		return new OrderDTO(orderRepository.save(order));
 	}

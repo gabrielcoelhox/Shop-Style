@@ -12,7 +12,7 @@ import com.shopstyle.mscatalog.dto.SkuFormDTO;
 import com.shopstyle.mscatalog.entities.Media;
 import com.shopstyle.mscatalog.entities.Product;
 import com.shopstyle.mscatalog.entities.Sku;
-import com.shopstyle.mscatalog.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.mscatalog.exceptions.DefaultException;
 import com.shopstyle.mscatalog.repository.MediaRepository;
 import com.shopstyle.mscatalog.repository.ProductRepository;
 import com.shopstyle.mscatalog.repository.SkuRepository;
@@ -35,12 +35,12 @@ public class SkuService {
 	
 	public SkuDTO findById(Long id) {
 		return new SkuDTO(skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku with ID : "+ id + " not found.")));
+				() -> new DefaultException("Sku with ID : "+ id + " not found.", "NOT_FOUND", 404)));
 	}
 
 	public SkuDTO save(@Valid SkuFormDTO form) {
 		Product product = productRepository.findById(form.getProductId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product with ID: " + form.getProductId() + " not found. Enter a valid ID."));
+				() -> new DefaultException("Product with ID: " + form.getProductId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		
 		Sku sku = new Sku(form, product);	
 		for(String imagemUrl : form.getImages()) {
@@ -53,9 +53,9 @@ public class SkuService {
 
 	public SkuDTO update(Long id, @Valid SkuFormDTO skuFormDto) {
 		Product product = productRepository.findById(skuFormDto.getProductId()).orElseThrow(
-				() -> new MethodArgumentNotValidException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID."));
+				() -> new DefaultException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		Sku sku = skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID."));
+				() -> new DefaultException("Sku with ID: "+ id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		
 		sku.setProduct(product);
 		sku.setColor(skuFormDto.getColor());
@@ -74,13 +74,13 @@ public class SkuService {
 
 	public void deleteById(Long id) {
 		skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID. Enter a valid ID."));
+				() -> new DefaultException("Sku with ID: "+ id + " not found. Enter a valid ID. Enter a valid ID.", "NOT_FOUND", 404));
 		skuRepository.deleteById(id);
 	}
 	
 	public SkuDTO updateOrderSku(Long id, Integer quantity) {
 		Sku sku = skuRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Sku ID : "+ id + " not found."));
+				() -> new DefaultException("Sku ID : "+ id + " not found.", "NOT_FOUND", 404));
 		sku.setQuantity(sku.getQuantity() - quantity);
 		return new SkuDTO(skuRepository.save(sku));
 	}

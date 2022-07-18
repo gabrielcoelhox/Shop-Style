@@ -11,7 +11,7 @@ import com.shopstyle.mscatalog.dto.CategoryDTO;
 import com.shopstyle.mscatalog.dto.CategoryFormDTO;
 import com.shopstyle.mscatalog.dto.ProductDTO;
 import com.shopstyle.mscatalog.entities.Category;
-import com.shopstyle.mscatalog.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.mscatalog.exceptions.DefaultException;
 import com.shopstyle.mscatalog.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,13 +37,13 @@ public class CategoryService {
 
 	public List<ProductDTO> findListProductsById(Long id) {
 		Category category = categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));	
+				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));	
 		return category.getProducts().stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
 	public CategoryDTO update(Long id, @Valid CategoryFormDTO form) {
 		Category category = categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));
+				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		category.setName(form.getName());
 		category.setActive(form.isActive());
 		return new CategoryDTO(categoryRepository.save(category));
@@ -51,7 +51,7 @@ public class CategoryService {
 
 	public void deleteById(Long id) {
 		categoryRepository.findById(id).orElseThrow(
-				() -> new MethodArgumentNotValidException("Category with ID: " + id + " not found. Enter a valid ID."));
+				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		categoryRepository.deleteById(id);	
 	}
 }
