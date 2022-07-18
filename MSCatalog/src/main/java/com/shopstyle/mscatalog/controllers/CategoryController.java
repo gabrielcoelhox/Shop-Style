@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +24,14 @@ import com.shopstyle.mscatalog.services.CategoryService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/v1/categories")
+@RequiredArgsConstructor
 public class CategoryController {
 
-	@Autowired
-	private CategoryService categoryService;
+	private final CategoryService categoryService;
 	
 	@GetMapping
 	@ApiOperation(value = "Find all categories")
@@ -41,15 +41,15 @@ public class CategoryController {
 	
 	@GetMapping("/{id}/products")
 	@ApiOperation(value = "Find a category by id")
-	public ResponseEntity<List<ProductDTO>> findListProductsById(@PathVariable Long id){
-		return new ResponseEntity<>(categoryService.findListProductsById(id), HttpStatus.OK);
+	public ResponseEntity<List<ProductDTO>> findById(@PathVariable Long id){
+		return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new category")
 	public ResponseEntity<CategoryDTO> insert(@RequestBody @Valid CategoryFormDTO categoryFormDto){
-		return new ResponseEntity<>(categoryService.save(categoryFormDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(categoryService.insert(categoryFormDto), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({

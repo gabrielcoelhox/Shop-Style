@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mspayment.dto.PaymentDTO;
 import com.shopstyle.mspayment.dto.PaymentFormDTO;
-import com.shopstyle.mspayment.services.PaymentService;
+import com.shopstyle.mspayment.services.PaymentServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,25 +30,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentController {
 
-	private final PaymentService paymentService;
+	private final PaymentServiceImpl paymentServiceImpl;
 
 	@GetMapping
 	@ApiOperation(value = "Find all payments")
 	public ResponseEntity<List<PaymentDTO>> findAll() {
-		return new ResponseEntity<>(paymentService.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(paymentServiceImpl.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Find a payment by id")
 	public ResponseEntity<PaymentDTO> findById(@PathVariable Long id) {
-		return new ResponseEntity<>(paymentService.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(paymentServiceImpl.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new payment")
 	public ResponseEntity<PaymentDTO> insert(@RequestBody @Valid PaymentFormDTO paymentForm){
-		return new ResponseEntity<>(paymentService.insert(paymentForm), HttpStatus.CREATED);
+		return new ResponseEntity<>(paymentServiceImpl.insert(paymentForm), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -60,14 +60,14 @@ public class PaymentController {
 	@Transactional
 	@ApiOperation(value = "Update a payment")
 	public ResponseEntity<PaymentDTO> update(@PathVariable Long id, @RequestBody @Valid PaymentFormDTO paymentForm){
-		return new ResponseEntity<>(paymentService.update(id, paymentForm), HttpStatus.OK);
+		return new ResponseEntity<>(paymentServiceImpl.update(id, paymentForm), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@Transactional
 	@ApiOperation(value = "Delete a payment")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
-		paymentService.deleteById(id);
+		paymentServiceImpl.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

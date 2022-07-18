@@ -20,7 +20,7 @@ import com.shopstyle.mscustomer.dto.CustomerChangePasswordDTO;
 import com.shopstyle.mscustomer.dto.CustomerDTO;
 import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.dto.CustomerLoginDTO;
-import com.shopstyle.mscustomer.services.CustomerService;
+import com.shopstyle.mscustomer.services.CustomerServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,27 +32,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomerController {
 	
-	private final CustomerService customerService;
+	private final CustomerServiceImpl customerServiceImpl;
 	
 	@ApiOperation(value= "Return all users")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<CustomerDTO>> findAll() {
-		List<CustomerDTO> listCustomerDTO = customerService.findAll();
+		List<CustomerDTO> listCustomerDTO = customerServiceImpl.findAll();
 		return ResponseEntity.ok().body(listCustomerDTO);
 	}
 	
 	@ApiOperation(value= "Returns a unique user by id")	
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerDTO> findById(@PathVariable Long id) {
-		return new ResponseEntity<>(customerService.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(customerServiceImpl.findById(id), HttpStatus.OK);
 	}
 	
 	@Transactional
 	@PostMapping
 	@ApiOperation(value = "Insert a new Customer")
 	public ResponseEntity<CustomerDTO> insert(@RequestBody @Valid CustomerFormDTO customerFormDto) {
-		return new ResponseEntity<>(customerService.insert(customerFormDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(customerServiceImpl.insert(customerFormDto), HttpStatus.CREATED);
 	}
 	
 	@ApiOperation(value= "Update a customer")
@@ -64,17 +64,17 @@ public class CustomerController {
 	@Transactional
 	@PutMapping("/{id}")
 	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomerFormDTO customerFormDto, @PathVariable Long id) {
-		return new ResponseEntity<>(customerService.update(customerFormDto, id), HttpStatus.OK);
+		return new ResponseEntity<>(customerServiceImpl.update(customerFormDto, id), HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<CustomerDTO> login(@RequestBody @Valid CustomerLoginDTO customerLoginDto) {
-		return new ResponseEntity<>(customerService.login(customerLoginDto), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(customerServiceImpl.login(customerLoginDto), HttpStatus.ACCEPTED);
 	}
 	
 	@Transactional
 	@PutMapping("/{id}/password")
 	public ResponseEntity<CustomerDTO> changePassword(@RequestBody @Valid CustomerChangePasswordDTO passwordDto, @PathVariable Long id) {
-		return new ResponseEntity<>(customerService.changePassword(passwordDto, id), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(customerServiceImpl.changePassword(passwordDto, id), HttpStatus.ACCEPTED);
 	}
 }

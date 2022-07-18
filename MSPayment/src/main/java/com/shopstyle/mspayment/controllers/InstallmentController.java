@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mspayment.dto.InstallmentDTO;
 import com.shopstyle.mspayment.dto.InstallmentFormDTO;
-import com.shopstyle.mspayment.services.InstallmentService;
+import com.shopstyle.mspayment.services.InstallmentServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,13 +27,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InstallmentController {
 
-	private final InstallmentService installmentService;
+	private final InstallmentServiceImpl installmentServiceImpl;
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new installment")
 	public ResponseEntity<InstallmentDTO> insert(@RequestBody @Valid InstallmentFormDTO form){
-		return new ResponseEntity<>(installmentService.insert(form), HttpStatus.CREATED);
+		return new ResponseEntity<>(installmentServiceImpl.insert(form), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -45,14 +45,14 @@ public class InstallmentController {
 	@Transactional
 	@ApiOperation(value = "Update a installment")
 	public ResponseEntity<InstallmentDTO> update(@PathVariable Long id, @RequestBody @Valid InstallmentFormDTO form){
-		return new ResponseEntity<>(installmentService.update(id, form), HttpStatus.OK);
+		return new ResponseEntity<>(installmentServiceImpl.update(id, form), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@Transactional
 	@ApiOperation(value = "Delete a installment")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
-		installmentService.deleteById(id);
+		installmentServiceImpl.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

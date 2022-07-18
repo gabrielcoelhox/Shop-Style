@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mscatalog.dto.SkuDTO;
 import com.shopstyle.mscatalog.dto.SkuFormDTO;
-import com.shopstyle.mscatalog.services.SkuService;
+import com.shopstyle.mscatalog.services.SkuServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,20 +28,20 @@ import io.swagger.annotations.ApiResponses;
 public class SkuController {
 
 	@Autowired
-	private SkuService skuService;
+	private SkuServiceImpl skuServiceImpl;
 	
 	@GetMapping("/{id}")
 	@Transactional
 	@ApiOperation(value = "Find a sku by id")
 	public ResponseEntity<SkuDTO> findById(@PathVariable Long id){
-		return new ResponseEntity<>(skuService.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(skuServiceImpl.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new sku")
 	public ResponseEntity<SkuDTO> insert(@RequestBody @Valid SkuFormDTO skuForm){
-		return new ResponseEntity<>(skuService.save(skuForm), HttpStatus.CREATED);
+		return new ResponseEntity<>(skuServiceImpl.insert(skuForm), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -53,14 +53,14 @@ public class SkuController {
 	@Transactional
 	@ApiOperation(value = "Update a sku")
 	public ResponseEntity<SkuDTO> update(@PathVariable Long id, @RequestBody @Valid SkuFormDTO skuForm){
-		return new ResponseEntity<>(skuService.update(id, skuForm), HttpStatus.OK);
+		return new ResponseEntity<>(skuServiceImpl.update(id, skuForm), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@Transactional
 	@ApiOperation(value = "Delete a sku")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
-		skuService.deleteById(id);
+		skuServiceImpl.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

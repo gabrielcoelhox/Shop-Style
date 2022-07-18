@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mscatalog.dto.ProductDTO;
 import com.shopstyle.mscatalog.dto.ProductFormDTO;
-import com.shopstyle.mscatalog.services.ProductService;
+import com.shopstyle.mscatalog.services.ProductServiceImpl;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,25 +28,25 @@ import io.swagger.annotations.ApiResponses;
 public class ProductController {
 
 	@Autowired
-	private ProductService productService;
+	private ProductServiceImpl productServiceImpl;
 	
 	@GetMapping
 	@ApiOperation(value = "Find all products")
 	public ResponseEntity<List<ProductDTO>> findAll() {
-		return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(productServiceImpl.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Find a product by id")
 	public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
-		return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(productServiceImpl.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new product")
 	public ResponseEntity<ProductDTO> insert(@RequestBody ProductFormDTO product) {
-		return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
+		return new ResponseEntity<>(productServiceImpl.insert(product), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -58,13 +58,13 @@ public class ProductController {
 	@Transactional
 	@ApiOperation(value = "Update a product")
 	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductFormDTO product) {
-		return new ResponseEntity<>(productService.update(id, product), HttpStatus.OK);
+		return new ResponseEntity<>(productServiceImpl.update(id, product), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Delete a product")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-		productService.deleteById(id);
+		productServiceImpl.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

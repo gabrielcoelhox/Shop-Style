@@ -1,52 +1,21 @@
 package com.shopstyle.mspayment.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.stereotype.Service;
-
 import com.shopstyle.mspayment.dto.PaymentDTO;
 import com.shopstyle.mspayment.dto.PaymentFormDTO;
-import com.shopstyle.mspayment.entities.Payment;
-import com.shopstyle.mspayment.exceptions.DefaultException;
-import com.shopstyle.mspayment.repository.PaymentRepository;
 
-import lombok.RequiredArgsConstructor;
+public interface PaymentService {
 
-@Service
-@RequiredArgsConstructor
-public class PaymentService {
-
-	private final PaymentRepository paymentRepository;
-
-	public List<PaymentDTO> findAll() {
-		return paymentRepository.findAll().stream().map(PaymentDTO::new).collect(Collectors.toList());
-	}
+	List<PaymentDTO> findAll();
 	
-	public PaymentDTO findById(Long id) {
-		return new PaymentDTO(paymentRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404)));
-	}
+	PaymentDTO findById(Long id);
 
-	public PaymentDTO insert(@Valid PaymentFormDTO payForm) {
-		return new PaymentDTO(paymentRepository.save(new Payment(payForm)));
-	}
+	PaymentDTO insert(@Valid PaymentFormDTO paymentForm);
 
-	public PaymentDTO update(Long id, @Valid PaymentFormDTO payForm) {
-		Payment payment = paymentRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
-		payment.setType(payForm.getType());
-		payment.setActive(payForm.isActive());
-		payment.setInstallments(payForm.isInstallments());
-		
-		return new PaymentDTO(payment);
-	}
+	PaymentDTO update(Long id, @Valid PaymentFormDTO paymentForm);
 
-	public void deleteById(Long id) {
-		paymentRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
-		paymentRepository.deleteById(id);
-	}
+	void deleteById(Long id);
 }
