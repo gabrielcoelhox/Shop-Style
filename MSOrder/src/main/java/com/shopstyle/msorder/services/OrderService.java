@@ -21,8 +21,13 @@ import com.shopstyle.msorder.clients.dto.Sku;
 import com.shopstyle.msorder.dto.CartDTO;
 import com.shopstyle.msorder.dto.OrderDTO;
 import com.shopstyle.msorder.dto.OrderFormDTO;
+import com.shopstyle.msorder.dto.PaymentDTO;
 import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
+import com.shopstyle.msorder.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.msorder.rabbitmq.consumer.PaymentOrderStatus;
+import com.shopstyle.msorder.rabbitmq.entities.PaymentOrder;
+import com.shopstyle.msorder.rabbitmq.entities.SkuOrder;
 import com.shopstyle.msorder.repository.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -66,33 +71,66 @@ public class OrderService {
 		return orderStream.map(OrderDTO::new).collect(Collectors.toList());
 	}
 	
-	public OrderDTO update(OrderFormDTO orderForm) {
+	public OrderDTO update(OrderFormDTO form) {
 		
-		Order order = new Order();
-		Customer customer = customerClient.getCustomer(orderForm.getCustomer().getId());
-		Address address = customerClient.getAddress(orderForm.getCustomer().getAddressId());
-		Payment payment = paymentClient.getPayment(orderForm.getPayment().getId());
+		Order o = new Order();
+		Customer customer = customerClient.getCustomer(form.getCustomer().getId());
+		Address address = customerClient.getAddress(form.getCustomer().getAddressId());
+		Payment payment = paymentClient.getPayment(form.getPayment().getId());
 		Installment installment = new Installment();
-		installment.setAmount(orderForm.getPayment().getInstallments());
+		installment.setAmount(form.getPayment().getInstallments());
 		installment.setPayment(payment);
 		Double total = 0.0;
 		List<Sku> cart = new ArrayList<>();
 		
-		for(CartDTO cartDto : orderForm.getCart()) {
+		for (CartDTO cartDto : form.getCart()) {
 			Sku sku = catalogClient.getSku(cartDto.getSkuId());
-			sku.setQuantity(cartDto.getQuantity());
+			if(sku.getQuantity() >= cartDto.getQuantity()) {
+				sku.setQuantity(cartDto.getQuantity());
+			} else {
+				throw new QuantityUnavailableException("Quantity unavailable Sku ID: " + sku.getId());
+			}
 			cart.add(sku);
 			total += (sku.getPrice() * cartDto.getQuantity());
 		}
 	
-		order.setCustomer(customer);
-		order.setAddress(address);
-		order.setPayment(payment);
-		order.setInstallment(installment);
-		order.setCart(cart);
-		order.setDate(LocalDate.now());
-		order.setStatus(Status.PROCESSING_PAYMENT);
-		order.setTotal(total);
+		o.setCustomer(customer);
+		o.setAddress(address);
+		o.setPayment(payment);
+		o.setInstallment(installment);
+		o.setCart(cart);
+		o.setDate(LocalDate.now());
+		o.setStatus(Status.PROCESSING_PAYMENT);
+		o.setTotal(total);
+		
+		orderRepository.save(o);
+		rabbitTemplate.convertAndSend(queueSkuOrder, builderSkuOrder(o));
+		rabbitTemplate.convertAndSend(queuePaymentOrder, builderPaymentOrder(o));
+		return new OrderDTO(o);
+	}
+	
+	public OrderDTO updateStatusPayment(PaymentOrderStatus orderStatus) {
+		Order order = orderRepository.findById(orderStatus.getOrderId()).orElseThrow(
+				() -> new MethodArgumentNotValidException("Order with ID: " + orderStatus.getOrderId() + " not found."));
+		order.setStatus(orderStatus.getStatus());
 		return new OrderDTO(orderRepository.save(order));
+	}
+	
+	private PaymentOrder builderPaymentOrder(Order o) {
+		
+		PaymentOrder paymentOrder = new PaymentOrder();
+		PaymentDTO paymentDto = new PaymentDTO();
+		paymentDto.setId(o.getPayment().getId());
+		paymentDto.setInstallments(o.getInstallment().getAmount());
+		paymentOrder.setOrderId(o.getId());
+		paymentOrder.setPayment(paymentDto);
+		return paymentOrder;
+	}
+	
+	private SkuOrder builderSkuOrder(Order o) {
+		SkuOrder skuOrder = new SkuOrder();
+		skuOrder.setOrderId(o.getId());
+		skuOrder.setSkus(o.getCart());
+		return skuOrder;
 	}
 }

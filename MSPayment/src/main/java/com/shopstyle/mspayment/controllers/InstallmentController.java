@@ -2,7 +2,6 @@ package com.shopstyle.mspayment.controllers;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,19 +20,20 @@ import com.shopstyle.mspayment.services.InstallmentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/v1/installments")
+@RequiredArgsConstructor
 public class InstallmentController {
 
-	@Autowired
-	private InstallmentService installmentService;
+	private final InstallmentService installmentService;
 	
 	@PostMapping
 	@Transactional
 	@ApiOperation(value = "Insert a new installment")
-	public ResponseEntity<InstallmentDTO> insert(@RequestBody @Valid InstallmentFormDTO installmentForm){
-		return new ResponseEntity<>(installmentService.insert(installmentForm), HttpStatus.CREATED);
+	public ResponseEntity<InstallmentDTO> insert(@RequestBody @Valid InstallmentFormDTO form){
+		return new ResponseEntity<>(installmentService.insert(form), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -44,8 +44,8 @@ public class InstallmentController {
 	@PutMapping("/{id}")
 	@Transactional
 	@ApiOperation(value = "Update a installment")
-	public ResponseEntity<InstallmentDTO> update(@PathVariable Long id, @RequestBody @Valid InstallmentFormDTO installmentForm){
-		return new ResponseEntity<>(installmentService.update(id, installmentForm), HttpStatus.OK);
+	public ResponseEntity<InstallmentDTO> update(@PathVariable Long id, @RequestBody @Valid InstallmentFormDTO form){
+		return new ResponseEntity<>(installmentService.update(id, form), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

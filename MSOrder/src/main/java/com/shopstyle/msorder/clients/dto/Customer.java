@@ -4,11 +4,11 @@ import java.time.LocalDate;
 
 import com.shopstyle.msorder.clients.enums.Sex;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Customer {
 
 	private Long id;

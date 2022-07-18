@@ -38,12 +38,12 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<StandardError> invalidFields(MethodArgumentNotValidException ex, HttpServletRequest request){
-		StandardError erro = new StandardError();
-		erro.setTimestamp(Instant.now());
-		erro.setStatus(HttpStatus.BAD_REQUEST.value());
-		erro.setError("Quantity unavailable.");
-		erro.setMessage(ex.getMessage());
-		erro.setPath(request.getRequestURI());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+		StandardError error = new StandardError();
+		error.setTimestamp(Instant.now());
+		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setError("Quantity unavailable.");
+		error.setMessage(ex.getMessage());
+		error.setPath(request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 }

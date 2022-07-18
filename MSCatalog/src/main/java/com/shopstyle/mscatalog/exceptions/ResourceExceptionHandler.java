@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ResourceExceptionHandler {
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ExceptionHandler(ObjectNotFoundException.class)
 	public ResponseEntity<StandardError> objectNotFound(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
@@ -47,7 +47,7 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}	
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ExceptionHandler(CategoryNotValidException.class)
 	public ResponseEntity<StandardError> categoryNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());

@@ -48,7 +48,6 @@ public class SkuService {
 			sku.addImages(media);
 			mediaRepository.save(media);
 		}
-		
 		return new SkuDTO(skuRepository.save(sku));
 	}
 
@@ -77,5 +76,12 @@ public class SkuService {
 		skuRepository.findById(id).orElseThrow(
 				() -> new MethodArgumentNotValidException("Sku with ID: "+ id + " not found. Enter a valid ID. Enter a valid ID."));
 		skuRepository.deleteById(id);
+	}
+	
+	public SkuDTO updateOrderSku(Long id, Integer quantity) {
+		Sku sku = skuRepository.findById(id).orElseThrow(
+				() -> new MethodArgumentNotValidException("Sku ID : "+ id + " not found."));
+		sku.setQuantity(sku.getQuantity() - quantity);
+		return new SkuDTO(skuRepository.save(sku));
 	}
 }

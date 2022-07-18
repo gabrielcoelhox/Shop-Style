@@ -1,10 +1,10 @@
 package com.shopstyle.msorder.clients.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Payment {
 
 	private Long id;	

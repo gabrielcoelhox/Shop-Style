@@ -3,7 +3,6 @@ package com.shopstyle.mscustomer.controllers;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddressController {
 
-	@Autowired
 	private final AddressService addressService;
 	
 	@GetMapping("/{id}")
@@ -41,8 +39,8 @@ public class AddressController {
 	@Transactional
 	@PostMapping
 	@ApiOperation(value = "Insert a new Address")
-	public ResponseEntity<AddressDTO> insert(@RequestBody @Valid AddressFormDTO addressFormDto) {
-		return new ResponseEntity<>(addressService.insert(addressFormDto), HttpStatus.CREATED);
+	public ResponseEntity<AddressDTO> insert(@RequestBody @Valid AddressFormDTO form) {
+		return new ResponseEntity<>(addressService.insert(form), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -52,8 +50,8 @@ public class AddressController {
 	})
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Update a Address")
-	public ResponseEntity<AddressDTO> update(@PathVariable Long id, @RequestBody @Valid AddressFormDTO addressFormDto) {
-		return new ResponseEntity<>(addressService.update(id, addressFormDto), HttpStatus.OK);
+	public ResponseEntity<AddressDTO> update(@PathVariable Long id, @RequestBody @Valid AddressFormDTO form) {
+		return new ResponseEntity<>(addressService.update(id, form), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
