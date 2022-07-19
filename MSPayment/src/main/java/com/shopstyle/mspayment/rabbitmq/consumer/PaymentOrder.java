@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class PaymentOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private String orderId;
 	private PaymentRabbitDTO payment;
+	private String orderId;
 }

@@ -5,7 +5,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import com.shopstyle.msorder.services.OrderServiceImpl;
+import com.shopstyle.msorder.services.OrderService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RabbitMQConsumer {
 
-	private final OrderServiceImpl orderServiceImpl;
+	private final OrderService orderService;
 	
 	@Bean
 	public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
@@ -22,6 +22,6 @@ public class RabbitMQConsumer {
 	
 	@RabbitListener(queues = "${mq.queues.order-payment}")
 	private void processMessage(PaymentOrderStatus paymentOrderStatus) {			
-		orderServiceImpl.updateStatusPayment(paymentOrderStatus);
+		orderService.updateStatusPayment(paymentOrderStatus);
 	}
 }

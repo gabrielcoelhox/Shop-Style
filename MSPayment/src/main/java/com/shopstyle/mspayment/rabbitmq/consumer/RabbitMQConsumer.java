@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,8 @@ public class RabbitMQConsumer {
 	
 	private final PaymentRepository paymentRepository;
 	
-	private final RabbitTemplate rabbitTemplate;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 	
 	@RabbitListener(queues = "${mq.queues.payment-order}")
 	private void processMessage(PaymentOrder paymentOrder) {
@@ -57,6 +59,6 @@ public class RabbitMQConsumer {
 		} else {
 			status = Status.PAYMENT_NOT_FOUND;
 		}
-		rabbitTemplate.convertAndSend(queueOrderPayment, new PaymentOrderStatus (status, paymentOrder.getOrderId()));
+		rabbitTemplate.convertAndSend(queueOrderPayment, new PaymentOrderStatus(paymentOrder.getOrderId(), status));
 	}
 }

@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class PaymentOrderStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Status status;
 	private String orderId;
+	private Status status;
 }

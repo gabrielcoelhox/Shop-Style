@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,8 @@ public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
 	
-	private final RabbitTemplate rabbitTemplate;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 	
 	@Value("${mq.queues.sku-order}")
 	private String queueSkuOrder;

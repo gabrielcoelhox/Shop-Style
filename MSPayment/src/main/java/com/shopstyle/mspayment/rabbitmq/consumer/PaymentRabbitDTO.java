@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class PaymentRabbitDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Integer installments;
 	private Long id;
+	private Integer installments;
 }

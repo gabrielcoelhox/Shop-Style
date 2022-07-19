@@ -6,6 +6,7 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +22,8 @@ public class RabbitMQPublisher {
 	@Value("${mq.exchange.order}")
 	private String exchange;
 	
-	private final AmqpAdmin amqpAdmin;
+	@Autowired
+	private AmqpAdmin amqpAdmin;
 	
 	private Queue queue(String queueName) {
 		return new Queue(queueName, true, false, false);
