@@ -1,1 +1,0 @@
-INSERT INTO TB_USER(FIRST_NAME, LAST_NAME, SEX, CPF, BIRTH_DATE, EMAIL, PASSWORD, ACTIVE) VALUES ('Neymar', 'Júnior', 'MASCULINO', '111.222.333-44', '1992-05-02', 'neymarjunior@compasso.com.br', '12345678', 1); -- senha: 12345

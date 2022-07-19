@@ -7,12 +7,10 @@ import javax.validation.constraints.NotNull;
 
 import com.shopstyle.mscustomer.enums.State;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class AddressFormDTO {
 

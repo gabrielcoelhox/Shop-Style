@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_address")
+@Table(name = "address")
 @Data
 @NoArgsConstructor
 public class Address {
@@ -32,7 +32,7 @@ public class Address {
 	private Long id;
 	
 	@NotNull
-	@Length(min = 2, max = 2)
+	@Length(min = 2)
 	@Enumerated(EnumType.STRING)
 	private State state;
 	

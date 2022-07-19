@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopstyle.mscustomer.dto.AddressDTO;
 import com.shopstyle.mscustomer.dto.AddressFormDTO;
-import com.shopstyle.mscustomer.services.AddressServiceImpl;
+import com.shopstyle.mscustomer.services.AddressService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,19 +28,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddressController {
 
-	private final AddressServiceImpl addressServiceImpl;
+	private final AddressService addressService;
 	
 	@GetMapping("/{id}")
 	@ApiOperation(value= "Returns a unique address by id")	
 	public ResponseEntity<AddressDTO> findById(@PathVariable Long id){
-		return new ResponseEntity<>(addressServiceImpl.findById(id), HttpStatus.OK);
+		return new ResponseEntity<>(addressService.findById(id), HttpStatus.OK);
 	}
 	
 	@Transactional
 	@PostMapping
 	@ApiOperation(value = "Insert a new Address")
 	public ResponseEntity<AddressDTO> insert(@RequestBody @Valid AddressFormDTO form) {
-		return new ResponseEntity<>(addressServiceImpl.insert(form), HttpStatus.CREATED);
+		return new ResponseEntity<>(addressService.insert(form), HttpStatus.CREATED);
 	}
 	
 	@ApiResponses({
@@ -51,13 +51,13 @@ public class AddressController {
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Update a Address")
 	public ResponseEntity<AddressDTO> update(@PathVariable Long id, @RequestBody @Valid AddressFormDTO form) {
-		return new ResponseEntity<>(addressServiceImpl.update(id, form), HttpStatus.OK);
+		return new ResponseEntity<>(addressService.update(id, form), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Delete by Id")
 	public ResponseEntity<AddressDTO> deleteById(@PathVariable Long id) {
-		addressServiceImpl.deleteById(id); 
+		addressService.deleteById(id); 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

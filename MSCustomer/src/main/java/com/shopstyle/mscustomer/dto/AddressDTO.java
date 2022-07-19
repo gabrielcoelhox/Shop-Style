@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.shopstyle.mscustomer.entities.Address;
 import com.shopstyle.mscustomer.enums.State;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AddressDTO {

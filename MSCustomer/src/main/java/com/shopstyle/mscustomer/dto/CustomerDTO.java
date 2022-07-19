@@ -8,12 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.enums.Sex;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CustomerDTO {

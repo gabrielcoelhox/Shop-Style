@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopstyle.msorder.dto.OrderDTO;
 import com.shopstyle.msorder.dto.OrderFormDTO;
 import com.shopstyle.msorder.enums.Status;
-import com.shopstyle.msorder.services.OrderServiceImpl;
+import com.shopstyle.msorder.services.OrderService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderController {
 
-	private final OrderServiceImpl orderServiceImpl;
+	private final OrderService orderService;
 	
 	@GetMapping
 	public ResponseEntity<List<OrderDTO>> findAll(){
-		return new ResponseEntity<>(orderServiceImpl.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/customers/{id}")
@@ -37,11 +37,11 @@ public class OrderController {
 			@RequestParam(required = false) LocalDate startDate, 
 			@RequestParam(required = false) LocalDate endDate, 
 			@RequestParam(required = false) Status status) {
-		return new ResponseEntity<>(orderServiceImpl.findByCustomerId(id, startDate, endDate, status), HttpStatus.OK);
+		return new ResponseEntity<>(orderService.findByCustomerId(id, startDate, endDate, status), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	public ResponseEntity<OrderDTO> insert(@RequestBody OrderFormDTO orderForm) {
-		return new ResponseEntity<>(orderServiceImpl.insert(orderForm), HttpStatus.CREATED);
+		return new ResponseEntity<>(orderService.insert(orderForm), HttpStatus.CREATED);
 	}
 }
