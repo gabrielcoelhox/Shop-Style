@@ -1,4 +1,4 @@
-<p align="center"> 💻 Atualizado em 28 de Junho de 2022 💻</p>
+<p align="center"> 💻 Atualizado em 20 de Julho de 2022 💻</p>
 
 <h1 align="center"> 🛒 Shop Style 🛒</h1>
 
@@ -16,7 +16,8 @@
 [MS Customer](#id2)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Catalog](#id3)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Payment](#id4)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-[MS Order](#id5)
+[MS Order](#id5)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+[MS Audit](#id6)
 
 # <a id="id1"> 💻 O Projeto </a>
 
@@ -437,7 +438,7 @@ Os possíveis status que o ms-payment pode enviar para o ms-order são os seguin
 - As parcelas informadas não estão dentro do limite definido - *__PAYMENT_AMOUNT_NOT_AVAILABLE__*
     
 #### ❗ Observação
-Usar PostgreSQL e RabbitMQ.
+- Usar PostgreSQL e RabbitMQ.
 </details>
   
 <details>
@@ -498,10 +499,24 @@ Após realizar a inserção do documento, deve ser feito uma comunicação com o
 - Na hora da inserção do documento na coleção deve ser calculado o total da compra, a partir do objeto *__cart__* é possível fazer esse calculo, assim como inserir a data e a hora que ocorreu a compra. O campo *__status__* deve ser salvo com o valor inicial de *__PROCESSING_PAYMENT__*.
 - O endpoint *__GET - /v1/orders__* necessita de três query param, sendo que um é obrigatório. O query param obrigatório é o *__startDate__* que informa a partir de qual data que deseja filtrar os pedidos realizados, o segundo query param é o *__endDate__* que usado em conjunto com o *__startDate__* define um intervalo de tempo dos pedidos realizados. O ultimo query param é o *__status__* para filtrar os pedidos a partir do seu status.
 - O endpoint *__GET - /v1/orders/customers/:customerId__* necessita de três query param, mas nenhum é obrigatório. O query param *__startDate__* informa a partir de qual data que deseja filtrar os pedidos realizados, o segundo query param é o *__endDate__* que usado em conjunto com o *__startDate__* define um intervalo de tempo dos pedidos realizados. O ultimo query param é o *__status__* para filtrar os pedidos a partir do seu status.
+</details>
+
+<details>
+  <summary><strong><a id="id6"> <h1> :mag_right: MS Audit </h1></strong></summary>
+
+O MS audit é o micro-serviço responsável pela auditoria de todos os eventos que ocorreu no processamento de um pedido. O MS audit possui os seguinte endpoint:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+# GET - /v1/audit/orders/:orderId
+```
+</details>  
+
+Todos os eventos que transita entre o ms-order, ms-payment e ms-catalog devem ser salvas na base do ms-audit. Com essas informações salvas teremos uma visão ampla de todos os dados que foi transitado entre os micro-serviços que processa um pedido.
     
-    
-    
-    
+#### ❗ Observação
+- Usar o MongoDB    
     
     
 [ISO-8601]: https://pt.wikipedia.org/wiki/ISO_8601
