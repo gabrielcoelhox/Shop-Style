@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.shopstyle.mscatalog.rabbitmq.entities.Sku;
 import com.shopstyle.mscatalog.rabbitmq.entities.SkuOrder;
-import com.shopstyle.mscatalog.services.SkuServiceImpl;
+import com.shopstyle.mscatalog.services.SkuService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RabbitMQConsumer {
 
-	private final SkuServiceImpl service;
+	private final SkuService service;
 	
 	@Bean
 	public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

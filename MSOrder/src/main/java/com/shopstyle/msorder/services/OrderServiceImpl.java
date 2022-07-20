@@ -55,8 +55,15 @@ public class OrderServiceImpl implements OrderService {
 	@Value("${mq.queues.payment-order}")
 	private String queuePaymentOrder;
 	
-	public List<OrderDTO> findAll() {
-		return orderRepository.findAll().stream().map(OrderDTO::new).collect(Collectors.toList());
+	public List<OrderDTO> findAll(LocalDate startDate,LocalDate endDate,Status status) {
+		
+		Stream<Order> ordersStream = orderRepository.findAll().stream().filter(o -> (o.getDate().isAfter(startDate) || o.getDate().isEqual(startDate)));
+		if (endDate != null) {
+			ordersStream = ordersStream.filter(o -> (o.getDate().isBefore(endDate) || o.getDate().isEqual(endDate)));
+		} if (status != null) {
+			ordersStream = ordersStream.filter(o -> (o.getStatus() == status));
+		}
+		return ordersStream.map(OrderDTO::new).collect(Collectors.toList());
 	}
 	
 	public List<OrderDTO> findByCustomerId(Long id, LocalDate startDate, LocalDate endDate, Status status) {
@@ -64,11 +71,9 @@ public class OrderServiceImpl implements OrderService {
 		Stream<Order> orderStream = orderRepository.findByCustomerId(id).stream();
 		if (status != null) {
 			orderStream = orderStream.filter(o -> (o.getStatus() == status));
-		}
-		if (startDate != null) {
+		} if (startDate != null) {
 			orderStream = orderStream.filter(o -> (o.getDate().isAfter(startDate) || o.getDate().isEqual(startDate)));
-		}
-		if (endDate != null) {
+		} if (endDate != null) {
 			orderStream = orderStream.filter(o -> (o.getDate().isBefore(endDate) || o.getDate().isEqual(endDate)));
 		}
 		return orderStream.map(OrderDTO::new).collect(Collectors.toList());

@@ -3,6 +3,8 @@ package com.shopstyle.msorder.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,11 @@ public class OrderController {
 	private final OrderService orderService;
 	
 	@GetMapping
-	public ResponseEntity<List<OrderDTO>> findAll(){
-		return new ResponseEntity<>(orderService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<OrderDTO>> findAll(
+			@RequestParam(required = true) LocalDate startDate, 
+			@RequestParam(required = false) LocalDate endDate, 
+			@RequestParam(required = false) Status status) {
+		return new ResponseEntity<>(orderService.findAll(startDate, endDate, status), HttpStatus.OK);
 	}
 	
 	@GetMapping("/customers/{id}")
@@ -43,7 +48,7 @@ public class OrderController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<OrderDTO> insert(@RequestBody OrderFormDTO orderForm) {
-		return new ResponseEntity<>(orderService.insert(orderForm), HttpStatus.CREATED);
+	public ResponseEntity<OrderDTO> insert(@RequestBody @Valid OrderFormDTO form) {
+		return new ResponseEntity<>(orderService.insert(form), HttpStatus.CREATED);
 	}
 }

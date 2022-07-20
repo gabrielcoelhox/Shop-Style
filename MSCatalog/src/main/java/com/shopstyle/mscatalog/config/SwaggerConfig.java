@@ -28,7 +28,7 @@ public class SwaggerConfig {
 	
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("Projeto Shop Style")
+				.title("Shop Style - MS Catalog Microservice")
 				.description("MS-Catalog")
 				.version("1.0")
 				.build();

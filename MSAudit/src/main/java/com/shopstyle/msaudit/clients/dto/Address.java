@@ -1,6 +1,6 @@
-package com.shopstyle.msorder.clients.dto;
+package com.shopstyle.msaudit.clients.dto;
 
-import com.shopstyle.msorder.clients.enums.State;
+import com.shopstyle.msaudit.clients.enums.State;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

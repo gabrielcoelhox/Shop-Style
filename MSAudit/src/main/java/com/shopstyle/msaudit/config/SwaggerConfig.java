@@ -1,4 +1,4 @@
-package com.shopstyle.msorder.config;
+package com.shopstyle.msaudit.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class SwaggerConfig {
 	    return new Docket(DocumentationType.SWAGGER_2)
 	            .useDefaultResponseMessages(false)
 	            .select()
-	            .apis(RequestHandlerSelectors.basePackage("com.shopstyle.msorder"))
+	            .apis(RequestHandlerSelectors.basePackage("com.shopstyle.msaudit"))
 	            .paths(PathSelectors.ant("/**"))
 	            .build()
 	            .apiInfo(apiInfo());
@@ -26,10 +26,9 @@ public class SwaggerConfig {
 	
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("Shop Style - MS Order Microservice")
-				.description("MS-Order")
+				.title("Shop Style - MS Audit Microservice")
+				.description("MS-Audit")
 				.version("1.0")
 				.build();
 	}
-
 }
