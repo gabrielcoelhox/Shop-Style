@@ -36,7 +36,7 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}	
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ExceptionHandler(QuantityUnavailableException.class)
 	public ResponseEntity<StandardError> invalidFields(MethodArgumentNotValidException ex, HttpServletRequest request){
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());

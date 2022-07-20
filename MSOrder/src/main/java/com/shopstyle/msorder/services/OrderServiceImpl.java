@@ -26,7 +26,7 @@ import com.shopstyle.msorder.dto.PaymentDTO;
 import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
 import com.shopstyle.msorder.exceptions.DefaultException;
-import com.shopstyle.msorder.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.msorder.exceptions.QuantityUnavailableException;
 import com.shopstyle.msorder.rabbitmq.consumer.PaymentOrderStatus;
 import com.shopstyle.msorder.rabbitmq.entities.PaymentOrder;
 import com.shopstyle.msorder.rabbitmq.entities.SkuOrder;
@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 			if(sku.getQuantity() >= cartDto.getQuantity()) {
 				sku.setQuantity(cartDto.getQuantity());
 			} else {
-				throw new MethodArgumentNotValidException("Quantity unavailable Sku ID: " + sku.getId());
+				throw new QuantityUnavailableException("Quantity unavailable Sku ID: " + sku.getId());
 			}
 			cart.add(sku);
 			total += (sku.getPrice() * cartDto.getQuantity());

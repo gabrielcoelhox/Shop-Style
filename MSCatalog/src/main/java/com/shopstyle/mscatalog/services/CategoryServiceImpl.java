@@ -23,7 +23,8 @@ public class CategoryServiceImpl implements CategoryService {
 	private final CategoryRepository categoryRepository;
 
 	public CategoryDTO insert(@Valid CategoryFormDTO form) {
-		Category parentCategory = categoryRepository.findById(form.getParentId()).orElse(null);
+		Category parentCategory = categoryRepository.findById(form.getParentId()).orElseThrow(
+				() -> new DefaultException("Category with ID: " + form.getParentId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		Category saveCategory = categoryRepository.save(new Category(form, parentCategory));
 		if(parentCategory != null) {
 			parentCategory.addChildren(saveCategory);

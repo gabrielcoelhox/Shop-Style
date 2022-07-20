@@ -15,7 +15,7 @@ import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.dto.CustomerLoginDTO;
 import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.exceptions.DefaultException;
-import com.shopstyle.mscustomer.exceptions.InvalidPasswordException;
+import com.shopstyle.mscustomer.exceptions.LoginException;
 import com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscustomer.repository.CustomerRepository;
 
@@ -45,8 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			customerRepository.save(customer);
 			return new CustomerDTO(customer);
-		} catch (com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException e) {
-			throw new com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException(e.getMessage());
+		} catch (MethodArgumentNotValidException ex) {
+			throw new MethodArgumentNotValidException(ex.getMessage());
 		}
 	}
 	
@@ -63,8 +63,8 @@ public class CustomerServiceImpl implements CustomerService {
 			newCustomer.setPassword(customerForm.getPassword());
 			newCustomer.setActive(customerForm.isActive());	
 			return new CustomerDTO(newCustomer);		
-		} catch (MethodArgumentNotValidException e) {
-			throw new MethodArgumentNotValidException(e.getMessage());
+		} catch (MethodArgumentNotValidException ex) {
+			throw new MethodArgumentNotValidException(ex.getMessage());
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(loginCustomer != null && new BCryptPasswordEncoder().matches(customerLogin.getPassword(), loginCustomer.getPassword())) {	
 			return new CustomerDTO(loginCustomer);		
 		}
-		throw new InvalidPasswordException();
+		throw new LoginException("Login or password incorrect.");
 	}
 	
 	public CustomerDTO changePassword(@Valid CustomerChangePasswordDTO passwordDto, Long id) {

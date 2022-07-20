@@ -11,8 +11,8 @@ import com.shopstyle.mscatalog.dto.ProductDTO;
 import com.shopstyle.mscatalog.dto.ProductFormDTO;
 import com.shopstyle.mscatalog.entities.Category;
 import com.shopstyle.mscatalog.entities.Product;
+import com.shopstyle.mscatalog.exceptions.CategoryNotValidException;
 import com.shopstyle.mscatalog.exceptions.DefaultException;
-import com.shopstyle.mscatalog.exceptions.MethodArgumentNotValidException;
 import com.shopstyle.mscatalog.repository.CategoryRepository;
 import com.shopstyle.mscatalog.repository.ProductRepository;
 
@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 		if(category.isActive() && category.getChildren().isEmpty()) {
 			return new ProductDTO(productRepository.save(new Product(form, category)));
 		} else {
-			throw new MethodArgumentNotValidException("Not is possible to add a product to this category.");
+			throw new CategoryNotValidException("Not is possible to add a product to this category.");
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 			product.setCategory(category);
 			return new ProductDTO(productRepository.save(product));
 		} else {
-			throw new MethodArgumentNotValidException("Not is possible to add a product to this category.");
+			throw new CategoryNotValidException("Not is possible to add a product to this category.");
 		}
 	}
 	

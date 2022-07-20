@@ -9,7 +9,7 @@ import com.shopstyle.mspayment.dto.InstallmentFormDTO;
 import com.shopstyle.mspayment.entities.Installment;
 import com.shopstyle.mspayment.entities.Payment;
 import com.shopstyle.mspayment.exceptions.DefaultException;
-import com.shopstyle.mspayment.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.mspayment.exceptions.PaymentNotValidException;
 import com.shopstyle.mspayment.repository.InstallmentRepository;
 import com.shopstyle.mspayment.repository.PaymentRepository;
 
@@ -30,7 +30,7 @@ public class InstallmentServiceImpl implements InstallmentService {
 		if(payment.isActive() && payment.isInstallments()) {
 			return new InstallmentDTO(installmentRepository.save(new Installment(form, payment)));
 		} else {
-			throw new MethodArgumentNotValidException("The payment method chosen is not valid.");
+			throw new PaymentNotValidException("The payment method chosen is not valid.");
 		}	
 	}
 
