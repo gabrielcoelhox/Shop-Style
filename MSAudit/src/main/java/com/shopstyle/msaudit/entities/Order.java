@@ -1,4 +1,4 @@
-package com.shopstyle.msaudit.config.entities;
+package com.shopstyle.msaudit.entities;
 
 import java.time.LocalDate;
 import java.util.List;
