@@ -1,5 +1,6 @@
 package com.shopstyle.mscatalog.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ public class CategoryDTO {
 	private Long id;
 	private String name;
 	private boolean active;
-	private List<CategoryDTO> children;
+	private List<CategoryDTO> children = new ArrayList<>();
 	
 	public CategoryDTO(Category category) {
 		this.id = category.getId();

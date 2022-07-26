@@ -29,15 +29,18 @@ public class SkuServiceImpl implements SkuService {
 	
 	private final MediaRepository mediaRepository;
 
+	@Override
 	public List<SkuDTO> findAll() {
 		return skuRepository.findAll().stream().map(SkuDTO::new).collect(Collectors.toList());
 	}
 	
+	@Override
 	public SkuDTO findById(Long id) {
 		return new SkuDTO(skuRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Sku with ID : "+ id + " not found.", "NOT_FOUND", 404)));
 	}
 
+	@Override
 	public SkuDTO insert(@Valid SkuFormDTO form) {
 		Product product = productRepository.findById(form.getProductId()).orElseThrow(
 				() -> new DefaultException("Product with ID: " + form.getProductId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
@@ -51,33 +54,36 @@ public class SkuServiceImpl implements SkuService {
 		return new SkuDTO(skuRepository.save(sku));
 	}
 
-	public SkuDTO update(Long id, @Valid SkuFormDTO skuFormDto) {
-		Product product = productRepository.findById(skuFormDto.getProductId()).orElseThrow(
-				() -> new DefaultException("Product with ID: " + skuFormDto.getProductId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
+	@Override
+	public SkuDTO update(Long id, @Valid SkuFormDTO skuForm) {
+		Product product = productRepository.findById(skuForm.getProductId()).orElseThrow(
+				() -> new DefaultException("Product with ID: " + skuForm.getProductId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		Sku sku = skuRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Sku with ID: "+ id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		
 		sku.setProduct(product);
-		sku.setColor(skuFormDto.getColor());
-		sku.setColor(skuFormDto.getColor());
-		sku.setPrice(skuFormDto.getPrice());
-		sku.setQuantity(skuFormDto.getQuantity());
-		sku.setSize(skuFormDto.getSize());	
-		sku.setHeight(skuFormDto.getHeight());
-		sku.setWidth(skuFormDto.getWidth());
+		sku.setColor(skuForm.getColor());
+		sku.setColor(skuForm.getColor());
+		sku.setPrice(skuForm.getPrice());
+		sku.setQuantity(skuForm.getQuantity());
+		sku.setSize(skuForm.getSize());	
+		sku.setHeight(skuForm.getHeight());
+		sku.setWidth(skuForm.getWidth());
 		
-		for(String imagemUrl : skuFormDto.getImages()) {
+		for(String imagemUrl : skuForm.getImages()) {
 			mediaRepository.save(new Media(imagemUrl, sku));
 		}	
 		return new SkuDTO(skuRepository.save(sku));
 	}
 
+	@Override
 	public void deleteById(Long id) {
 		skuRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Sku with ID: "+ id + " not found. Enter a valid ID. Enter a valid ID.", "NOT_FOUND", 404));
 		skuRepository.deleteById(id);
 	}
 	
+	@Override
 	public SkuDTO updateOrderSku(Long id, Integer quantity) {
 		Sku sku = skuRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Sku ID : "+ id + " not found.", "NOT_FOUND", 404));

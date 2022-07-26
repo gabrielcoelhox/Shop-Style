@@ -22,7 +22,7 @@ public class RabbitMQConsumer {
 		return new Jackson2JsonMessageConverter();
 	}
 
-	@RabbitListener(queues = "${mq.queues.sku-order}")
+	@RabbitListener(queues = "${mq.queues.order-sku}")
 	private void processMessage(SkuOrder skuOrder) {			
 		for(Sku sku : skuOrder.getSkus()) {
 			service.updateOrderSku(sku.getId(), sku.getQuantity());

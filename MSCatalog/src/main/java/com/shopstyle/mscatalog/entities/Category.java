@@ -57,4 +57,9 @@ public class Category {
 		this.active = category.isActive();
 		this.parent = parentCategory;
 	}
+	
+	public Category(CategoryFormDTO category) {
+		this.name = category.getName();
+		this.active = category.isActive();
+	}
 }

@@ -22,26 +22,33 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
 
-	public CategoryDTO insert(@Valid CategoryFormDTO form) {
-		Category parentCategory = categoryRepository.findById(form.getParentId()).orElseThrow(
-				() -> new DefaultException("Category with ID: " + form.getParentId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
-		Category saveCategory = categoryRepository.save(new Category(form, parentCategory));
-		if(parentCategory != null) {
-			parentCategory.addChildren(saveCategory);
+	@Override
+	public CategoryDTO insert(@Valid CategoryFormDTO formDTO) {
+		if(formDTO.getParentId() == null) {
+			return new CategoryDTO(categoryRepository.save(new Category(formDTO)));
+		} else {
+			Category parentCategory = categoryRepository.findById(formDTO.getParentId()).orElse(null);
+			Category saveCategory = categoryRepository.save(new Category(formDTO, parentCategory));
+			if(parentCategory != null) {
+				parentCategory.addChildren(saveCategory);
+			}
+			return new CategoryDTO(saveCategory);
 		}
-		return new CategoryDTO(saveCategory);
 	}
-
+	
+	@Override
 	public List<CategoryDTO> findAll() {
 		return categoryRepository.findAll().stream().filter(c -> c.getParent() == null).map(CategoryDTO::new).collect(Collectors.toList());
 	}
 
+	@Override
 	public List<ProductDTO> findById(Long id) {
 		Category category = categoryRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));	
 		return category.getProducts().stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
+	@Override
 	public CategoryDTO update(Long id, @Valid CategoryFormDTO form) {
 		Category category = categoryRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
@@ -50,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return new CategoryDTO(categoryRepository.save(category));
 	}
 
+	@Override
 	public void deleteById(Long id) {
 		categoryRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Category with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
