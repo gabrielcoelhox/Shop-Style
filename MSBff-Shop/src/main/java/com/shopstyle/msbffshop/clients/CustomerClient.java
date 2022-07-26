@@ -1,0 +1,47 @@
+package com.shopstyle.msbffshop.clients;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.shopstyle.msbffshop.clients.customer.dto.AddressDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.AddressFormDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.CustomerChangePasswordDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.CustomerDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.CustomerFormDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.CustomerLoginDTO;
+
+@Component
+@FeignClient("customer")
+public interface CustomerClient {
+
+	@PostMapping("/v1/login")
+	CustomerDTO loginCustomer(@RequestBody CustomerLoginDTO customerLoginDto);
+	
+	@PostMapping("/v1/customers")
+	CustomerDTO saveCustomer(@RequestBody CustomerFormDTO customerFormDto);
+	
+	@GetMapping("/v1/customers/{id}")
+	CustomerDTO getCustomer(@PathVariable Long id);
+	
+	@PutMapping("/v1/customers/{id}")
+	CustomerDTO updateCustomerById(@PathVariable Long id, @RequestBody CustomerFormDTO customerFormDto);
+	
+	@PutMapping("/v1/customers/{id}/password")
+	CustomerDTO changePasswordCustomer(@RequestBody CustomerChangePasswordDTO passwordDto, @PathVariable Long id);
+	
+	@PostMapping("/v1/addresses")
+	AddressDTO saveAddress(@RequestBody AddressFormDTO addressFormDto);
+
+	@PutMapping("/v1/addresses/{id}")
+	AddressDTO updateAddressById(@PathVariable Long id, @RequestBody AddressFormDTO addressFormDto);
+	
+	@DeleteMapping("/v1/addresses/{id}")
+	void deleteAddressById(@PathVariable Long id);
+
+}
