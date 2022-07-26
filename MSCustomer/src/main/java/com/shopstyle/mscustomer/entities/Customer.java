@@ -1,6 +1,7 @@
 package com.shopstyle.mscustomer.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,12 +48,11 @@ public class Customer {
 	@Enumerated(EnumType.STRING)
 	private Sex sex;
 	
-	@CPF
-	@NotNull
+	@CPF @NotNull
 	private String cpf;
 	
 	@NotNull
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private LocalDate birthDate;
 	
 	@Email
@@ -67,7 +67,7 @@ public class Customer {
 	private boolean active;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-	private List<Address> addresses;
+	private List<Address> addresses  = new ArrayList<>();
 	
 	public Customer(CustomerFormDTO form) {
 		this.firstName = form.getFirstName();

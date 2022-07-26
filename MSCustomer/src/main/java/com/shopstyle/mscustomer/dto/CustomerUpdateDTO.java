@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -13,43 +12,30 @@ import org.hibernate.validator.constraints.br.CPF;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shopstyle.mscustomer.enums.Sex;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
-public class CustomerFormDTO {
+public class CustomerUpdateDTO {
 
-	@NotNull (message = "firstName field cannot be null")
-	@Length(min = 3)
+	@NotNull @Length(min = 3)
 	private String firstName;
 	
-	@NotNull (message = "lastName field cannot be null")
-	@Length(min = 3)
+	@NotNull @Length(min = 3)
 	private String lastName;
 
-	@NotNull (message = "sex field cannot be null")
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Sex sex;
 
-	@NotNull (message = "cpf field cannot be null")
-	@CPF
+	@NotNull @CPF
 	private String cpf;
 	
-	@NotNull (message = "birthDate field cannot be null")
+	@NotNull
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private LocalDate birthdate;
 	
-	@Email @NotNull
-	private String email;
-	
-	@NotNull @Length(min = 6)
-	private String password;
-	
 	@NotNull
 	private boolean active;
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 }

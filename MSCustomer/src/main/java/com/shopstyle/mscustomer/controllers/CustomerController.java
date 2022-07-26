@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,8 @@ import com.shopstyle.mscustomer.dto.CustomerChangePasswordDTO;
 import com.shopstyle.mscustomer.dto.CustomerDTO;
 import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.dto.CustomerLoginDTO;
+import com.shopstyle.mscustomer.dto.CustomerUpdateDTO;
+import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.services.CustomerService;
 
 import io.swagger.annotations.ApiOperation;
@@ -42,10 +45,16 @@ public class CustomerController {
 		return ResponseEntity.ok().body(listCustomerDTO);
 	}
 	
-	@ApiOperation(value= "Returns a unique user by id")	
 	@GetMapping("/{id}")
+	@ApiOperation(value= "Find by Id")	
 	public ResponseEntity<CustomerDTO> findById(@PathVariable Long id) {
 		return new ResponseEntity<>(customerService.findById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping
+	@ApiOperation(value= "Find by Email")	
+	public ResponseEntity<Customer> findByEmail(@RequestParam(required = true) String email) {
+		return new ResponseEntity<>(customerService.findByEmail(email), HttpStatus.OK);
 	}
 	
 	@Transactional
@@ -63,8 +72,8 @@ public class CustomerController {
 	})
 	@Transactional
 	@PutMapping("/{id}")
-	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomerFormDTO customerFormDto, @PathVariable Long id) {
-		return new ResponseEntity<>(customerService.update(customerFormDto, id), HttpStatus.OK);
+	public ResponseEntity<CustomerDTO> update(@RequestBody @Valid CustomerUpdateDTO customerUpdate, @PathVariable Long id) {
+		return new ResponseEntity<>(customerService.update(customerUpdate, id), HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")

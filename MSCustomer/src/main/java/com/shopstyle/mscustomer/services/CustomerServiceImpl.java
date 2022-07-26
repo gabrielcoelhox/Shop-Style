@@ -13,10 +13,12 @@ import com.shopstyle.mscustomer.dto.CustomerChangePasswordDTO;
 import com.shopstyle.mscustomer.dto.CustomerDTO;
 import com.shopstyle.mscustomer.dto.CustomerFormDTO;
 import com.shopstyle.mscustomer.dto.CustomerLoginDTO;
+import com.shopstyle.mscustomer.dto.CustomerUpdateDTO;
 import com.shopstyle.mscustomer.entities.Customer;
 import com.shopstyle.mscustomer.exceptions.DefaultException;
 import com.shopstyle.mscustomer.exceptions.LoginException;
 import com.shopstyle.mscustomer.exceptions.MethodArgumentNotValidException;
+import com.shopstyle.mscustomer.exceptions.ObjectNotFoundException;
 import com.shopstyle.mscustomer.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,40 +36,47 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Transactional
+	@Override
 	public CustomerDTO findById(Long id) {
 		Customer customerObj = customerRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Customer with id " + id + " not found, enter a valid id", "NOT_FOUND", 404));
 		return new CustomerDTO(customerObj);
 	}
 	
+	@Override
+	public Customer findByEmail(String email) {
+		return customerRepository.findByEmail(email);
+	}
+	
+	@Override
 	public CustomerDTO insert(@Valid CustomerFormDTO customerForm) {
 		Customer customer = new Customer(customerForm);
 		try {
 			customerRepository.save(customer);
 			return new CustomerDTO(customer);
 		} catch (MethodArgumentNotValidException ex) {
-			throw new MethodArgumentNotValidException(ex.getMessage());
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
 	
-	public CustomerDTO update(@Valid CustomerFormDTO customerForm, Long id) {
+	@Override
+	public CustomerDTO update(@Valid CustomerUpdateDTO customerUpdate, Long id) {
 		Customer newCustomer = customerRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Customer with id " + id + " not found, enter a valid id", "NOT_FOUND", 404));
 		try {
-			newCustomer.setFirstName(customerForm.getFirstName());
-			newCustomer.setLastName(customerForm.getLastName());
-			newCustomer.setSex(customerForm.getSex());
-			newCustomer.setCpf(customerForm.getCpf());
-			newCustomer.setBirthDate(customerForm.getBirthdate());
-			newCustomer.setEmail(customerForm.getEmail());
-			newCustomer.setPassword(customerForm.getPassword());
-			newCustomer.setActive(customerForm.isActive());	
+			newCustomer.setFirstName(customerUpdate.getFirstName());
+			newCustomer.setLastName(customerUpdate.getLastName());
+			newCustomer.setSex(customerUpdate.getSex());
+			newCustomer.setCpf(customerUpdate.getCpf());
+			newCustomer.setBirthDate(customerUpdate.getBirthdate());
+			newCustomer.setActive(customerUpdate.isActive());	
 			return new CustomerDTO(newCustomer);		
 		} catch (MethodArgumentNotValidException ex) {
-			throw new MethodArgumentNotValidException(ex.getMessage());
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
 	
+	@Override
 	public CustomerDTO login(CustomerLoginDTO customerLogin) {
 		Customer loginCustomer = customerRepository.findByEmail(customerLogin.getEmail());
 		if(loginCustomer != null && new BCryptPasswordEncoder().matches(customerLogin.getPassword(), loginCustomer.getPassword())) {	
@@ -76,17 +85,18 @@ public class CustomerServiceImpl implements CustomerService {
 		throw new LoginException("Login or password incorrect.");
 	}
 	
-	public CustomerDTO changePassword(@Valid CustomerChangePasswordDTO passwordDto, Long id) {
+	@Override
+	public CustomerDTO changePassword(@Valid CustomerChangePasswordDTO passwordDTO, Long id) {
 		Customer changePass = customerRepository.findById(id).orElseThrow(
-				() -> new DefaultException("Customer with id: " + id + " not found, enter a valid id", "NOT_FOUND", 404));
-		if(Boolean.TRUE.equals(verificationPassword(changePass, passwordDto))) {	
-			changePass.setPassword(passwordDto.getNewPassword());
+				() -> new DefaultException("Customer with id " + id + " not found, enter a valid id", "NOT_FOUND", 404));
+		if(verificationPassword(changePass, passwordDTO)) {	
+			changePass.setPassword(passwordDTO.getNewPassword());
 			return new CustomerDTO(changePass);		
 		}
 		throw new MethodArgumentNotValidException("Any of the data entered is incorrect.");
 	}
 	
-	private Boolean verificationPassword(Customer customerPassword, CustomerChangePasswordDTO passwordDTO) {
+	private boolean verificationPassword(Customer customerPassword, CustomerChangePasswordDTO passwordDTO) {
 		if(new BCryptPasswordEncoder().matches(passwordDTO.getOldPassword(), customerPassword.getPassword())
 				&& passwordDTO.getCpf().equals(customerPassword.getCpf())
 				&& passwordDTO.getEmail().equals(customerPassword.getEmail())

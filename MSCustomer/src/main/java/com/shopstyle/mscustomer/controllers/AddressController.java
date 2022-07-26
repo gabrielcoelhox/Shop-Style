@@ -24,14 +24,14 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/address")
+@RequestMapping("/v1/addresses")
 @RequiredArgsConstructor
 public class AddressController {
 
 	private final AddressService addressService;
 	
 	@GetMapping("/{id}")
-	@ApiOperation(value= "Returns a unique address by id")	
+	@ApiOperation(value= "Find Address")	
 	public ResponseEntity<AddressDTO> findById(@PathVariable Long id){
 		return new ResponseEntity<>(addressService.findById(id), HttpStatus.OK);
 	}

@@ -51,7 +51,7 @@ public class BffShopController {
 	@GetMapping("/v1/customers/{id}")
 	@ApiOperation(value= "Customer by id")	
 	public ResponseEntity<CustomerDTO> findCustomerById(@PathVariable Long id) {
-		return new ResponseEntity<>(customerClient.getCustomer(id), HttpStatus.OK);
+		return new ResponseEntity<>(customerClient.findCustomerById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping("/v1/customers")

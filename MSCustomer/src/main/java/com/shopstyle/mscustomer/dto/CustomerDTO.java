@@ -1,6 +1,7 @@
 package com.shopstyle.mscustomer.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class CustomerDTO {
 	private LocalDate birthdate;
 	private String email;
 	private boolean active;
-	private List<AddressDTO> addresses;
+	private List<AddressDTO> addresses = new ArrayList<>();
 
 	public CustomerDTO(Customer customer) {
 		this.id = customer.getId();

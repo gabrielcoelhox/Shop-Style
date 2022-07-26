@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerLoginDTO {
 
-	@NotNull
-	@NotEmpty
+	@NotNull @NotEmpty
 	private String email;
 	
-	@NotNull
-	@NotEmpty
+	@NotNull @NotEmpty
 	private String password;
 }
