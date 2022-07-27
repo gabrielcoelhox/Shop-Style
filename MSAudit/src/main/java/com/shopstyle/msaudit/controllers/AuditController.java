@@ -13,6 +13,7 @@ import com.shopstyle.msaudit.dto.OrderDTO;
 import com.shopstyle.msaudit.entities.Order;
 import com.shopstyle.msaudit.services.AuditService;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,11 +24,13 @@ public class AuditController {
 	private final AuditService auditService;
 	
 	@GetMapping("/orders/{id}")
-	public ResponseEntity<OrderDTO> findBYid(@PathVariable String id) {
+	@ApiOperation(value= "Find Audit")
+	public ResponseEntity<OrderDTO> findById(@PathVariable String id) {
 		return new ResponseEntity<>(auditService.findById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping
+	@ApiOperation(value= "Insert Audit")
 	public ResponseEntity<OrderDTO> insert(@RequestBody Order orderInsert){
 		return new ResponseEntity<>(auditService.insert(orderInsert), HttpStatus.CREATED);
 	}

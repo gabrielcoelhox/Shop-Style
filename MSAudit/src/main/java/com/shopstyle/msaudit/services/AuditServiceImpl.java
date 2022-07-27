@@ -15,10 +15,12 @@ public class AuditServiceImpl implements AuditService {
 	
 	private final AuditRepository auditRepository;
 
+	@Override
 	public final OrderDTO insert(Order order) {
 		return new OrderDTO(auditRepository.save(order));
 	}
 
+	@Override
 	public final OrderDTO findById(String id) {
 		return new OrderDTO(auditRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Order with ID: " + id + " not found.", "NOT_FOUND", 404)));
