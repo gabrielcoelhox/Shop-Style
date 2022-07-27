@@ -1,4 +1,4 @@
-<p align="center"> 💻 Atualizado em 20 de Julho de 2022 💻</p>
+<p align="center"> 💻 Atualizado em 27 de Julho de 2022 💻</p>
 
 <h1 align="center"> 🛒 Shop Style 🛒</h1>
 
@@ -17,7 +17,8 @@
 [MS Catalog](#id3)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Payment](#id4)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
 [MS Order](#id5)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-[MS Audit](#id6)
+[MS Audit](#id6)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+[MS Bff-Shop](#id7)
 
 # <a id="id1"> 💻 O Projeto </a>
 
@@ -516,7 +517,42 @@ O MS audit é o micro-serviço responsável pela auditoria de todos os eventos q
 Todos os eventos que transita entre o ms-order, ms-payment e ms-catalog devem ser salvas na base do ms-audit. Com essas informações salvas teremos uma visão ampla de todos os dados que foi transitado entre os micro-serviços que processa um pedido.
     
 #### ❗ Observação
-- Usar o MongoDB    
+- Usar o MongoDB 
+</details>
+
+<details>
+  <summary><strong><a id="id7"> <h1> :shopping: MS Bff-Shop </h1></strong></summary>
+Todos os micro-serviços serão de uso interno para os funcionários da empresa. Então precisa ser disponibilizado um ponto de entrada para que os clientes possam se comunicar com as funcionalidades. O MS bff-shop tem os seguintes endpoints:
+<details>
+<summary><strong>Ver mais</strong></summary>
+
+```bash
+# POST - /v1/login
+
+# POST - /v1/customers
+# GET - /v1/customers/:id
+# PUT - /v1/customers/:id
+# PUT - /v1/customers/:id/password
+
+# POST - /v1/address
+# PUT - /v1/address/:id
+# DELETE - /v1/address/:id
+
+# GET - /v1/products
+# GET - /v1/products/:id
+
+# GET - /v1/categories
+# GET - /v1/categories/:id/products
+
+# GET - /v1/payments
+
+# POST - /v1/orders
+# GET - /v1/orders/customers/:customerId
+```
+</details>  
+
+#### ❗ Observação
+- Todos os endpoints precisam ser autenticados e autorizados via token JWT, exceto os endpoints __*POST - /v1/login*__ e __*POST - /v1/customers*__ .   
     
     
 [ISO-8601]: https://pt.wikipedia.org/wiki/ISO_8601
