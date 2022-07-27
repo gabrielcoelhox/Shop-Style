@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RabbitMQPublisher {
 
-	@Value("${mq.queues.order-payment}")
+	@Value("${mq.queues.payment-order}")
 	private String queueOrderPayment;
 	
 	@Value("${mq.exchange.order}")
@@ -46,9 +46,7 @@ public class RabbitMQPublisher {
 		Binding relatePaymentOrder = this.relate(paymentOrderQueue, exchange);
 		
 		this.amqpAdmin.declareQueue(paymentOrderQueue);
-		
 		this.amqpAdmin.declareExchange(exchange);
-		
 		this.amqpAdmin.declareBinding(relatePaymentOrder);
 	}
 }

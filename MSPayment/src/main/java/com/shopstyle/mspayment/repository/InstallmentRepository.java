@@ -8,4 +8,5 @@ import com.shopstyle.mspayment.entities.Installment;
 @Repository
 public interface InstallmentRepository extends JpaRepository<Installment, Long>{
 
+	Installment findByPaymentId(Long paymanetId);
 }

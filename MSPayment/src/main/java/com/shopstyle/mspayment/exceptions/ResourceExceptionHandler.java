@@ -49,7 +49,7 @@ public class ResourceExceptionHandler {
 	}	
 	
 	@ExceptionHandler(PaymentNotValidException.class)
-	public ResponseEntity<StandardError> categoryNotValid(PaymentNotValidException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> paymentNotValid(PaymentNotValidException ex, HttpServletRequest request){
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -60,13 +60,13 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<StandardError> invalidFields(DataIntegrityViolationException e, HttpServletRequest request){		
-		StandardError erro = new StandardError();
-		erro.setTimestamp(Instant.now());
-		erro.setStatus(HttpStatus.BAD_REQUEST.value());
-		erro.setError("Field does not comply with policies.");
-		erro.setMessage("Check the fields.");
-		erro.setPath(request.getRequestURI());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	public ResponseEntity<StandardError> invalidFields(DataIntegrityViolationException ex, HttpServletRequest request){		
+		StandardError error = new StandardError();
+		error.setTimestamp(Instant.now());
+		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setError("Field does not comply with policies.");
+		error.setMessage("Check the fields.");
+		error.setPath(request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 }

@@ -21,19 +21,23 @@ public class PaymentServiceImpl implements PaymentService {
 
 	private final PaymentRepository paymentRepository;
 
+	@Override
 	public List<PaymentDTO> findAll() {
 		return paymentRepository.findAll().stream().map(PaymentDTO::new).collect(Collectors.toList());
 	}
 	
+	@Override
 	public PaymentDTO findById(Long id) {
 		return new PaymentDTO(paymentRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404)));
 	}
 
-	public PaymentDTO insert(@Valid PaymentFormDTO payForm) {
-		return new PaymentDTO(paymentRepository.save(new Payment(payForm)));
+	@Override
+	public PaymentDTO insert(@Valid PaymentFormDTO paymentForm) {
+		return new PaymentDTO(paymentRepository.save(new Payment(paymentForm)));
 	}
 
+	@Override
 	public PaymentDTO update(Long id, @Valid PaymentFormDTO payForm) {
 		Payment payment = paymentRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));
@@ -44,6 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
 		return new PaymentDTO(payment);
 	}
 
+	@Override
 	public void deleteById(Long id) {
 		paymentRepository.findById(id).orElseThrow(
 				() -> new DefaultException("Payment with ID: " + id + " not found. Enter a valid ID.", "NOT_FOUND", 404));

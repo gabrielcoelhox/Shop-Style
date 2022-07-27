@@ -8,6 +8,8 @@ import com.shopstyle.mspayment.dto.InstallmentFormDTO;
 public interface InstallmentService {
 
 	InstallmentDTO insert(@Valid InstallmentFormDTO installmentForm);
+	
+	InstallmentDTO findByPaymentId(Long paymentId);
 
 	InstallmentDTO update(Long id, @Valid InstallmentFormDTO installmentForm);
 	
