@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.shopstyle.msorder.clients.AuditClientFeign;
 import com.shopstyle.msorder.clients.CatalogClientFeign;
 import com.shopstyle.msorder.clients.CustomerClientFeign;
 import com.shopstyle.msorder.clients.PaymentClientFeign;
@@ -25,6 +26,7 @@ import com.shopstyle.msorder.dto.OrderFormDTO;
 import com.shopstyle.msorder.dto.PaymentDTO;
 import com.shopstyle.msorder.entities.Order;
 import com.shopstyle.msorder.enums.Status;
+import com.shopstyle.msorder.exceptions.CustomerInactiveException;
 import com.shopstyle.msorder.exceptions.DefaultException;
 import com.shopstyle.msorder.exceptions.QuantityUnavailableException;
 import com.shopstyle.msorder.rabbitmq.consumer.PaymentOrderStatus;
@@ -43,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
 	private final PaymentClientFeign paymentClient;
 
 	private final CustomerClientFeign customerClient;
+	
+	private final AuditClientFeign auditClient;
 
 	private final OrderRepository orderRepository;
 	
@@ -55,7 +59,8 @@ public class OrderServiceImpl implements OrderService {
 	@Value("${mq.queues.payment-order}")
 	private String queuePaymentOrder;
 	
-	public List<OrderDTO> findAll(LocalDate startDate,LocalDate endDate,Status status) {
+	@Override
+	public List<OrderDTO> findAll(LocalDate startDate, LocalDate endDate, Status status) {
 		
 		Stream<Order> ordersStream = orderRepository.findAll().stream().filter(o -> (o.getDate().isAfter(startDate) || o.getDate().isEqual(startDate)));
 		if (endDate != null) {
@@ -66,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
 		return ordersStream.map(OrderDTO::new).collect(Collectors.toList());
 	}
 	
+	@Override
 	public List<OrderDTO> findByCustomerId(Long id, LocalDate startDate, LocalDate endDate, Status status) {
 
 		Stream<Order> orderStream = orderRepository.findByCustomerId(id).stream();
@@ -79,27 +85,33 @@ public class OrderServiceImpl implements OrderService {
 		return orderStream.map(OrderDTO::new).collect(Collectors.toList());
 	}
 	
+	@Override
 	public OrderDTO insert(OrderFormDTO form) {
 		
 		Order o = new Order();
 		Customer customer = customerClient.getCustomer(form.getCustomer().getId());
+		
+		if (!customer.isActive()) {
+			throw new CustomerInactiveException("Customer is not active.");
+		}
+		
 		Address address = customerClient.getAddress(form.getCustomer().getAddressId());
 		Payment payment = paymentClient.getPayment(form.getPayment().getId());
-		Installment installment = new Installment();
+		Installment installment = paymentClient.getInstallments(form.getPayment().getId());
 		installment.setAmount(form.getPayment().getInstallments());
 		installment.setPayment(payment);
 		Double total = 0.0;
 		List<Sku> cart = new ArrayList<>();
 		
-		for (CartDTO cartDto : form.getCart()) {
-			Sku sku = catalogClient.getSku(cartDto.getSkuId());
-			if(sku.getQuantity() >= cartDto.getQuantity()) {
-				sku.setQuantity(cartDto.getQuantity());
+		for (CartDTO cartDTO : form.getCart()) {
+			Sku sku = catalogClient.getSku(cartDTO.getSkuId());
+			if(sku.getQuantity() >= cartDTO.getQuantity()) {
+				sku.setQuantity(cartDTO.getQuantity());
 			} else {
-				throw new QuantityUnavailableException("Quantity unavailable Sku ID: " + sku.getId());
+				throw new QuantityUnavailableException("Quantity unavailable for Sku ID: " + sku.getId());
 			}
 			cart.add(sku);
-			total += (sku.getPrice() * cartDto.getQuantity());
+			total += (sku.getPrice() * cartDTO.getQuantity());
 		}
 	
 		o.setCustomer(customer);
@@ -112,26 +124,31 @@ public class OrderServiceImpl implements OrderService {
 		o.setTotal(total);
 		
 		orderRepository.save(o);
+		auditClient.saveOrderAudit(o);
 		rabbitTemplate.convertAndSend(queueSkuOrder, builderSkuOrder(o));
 		rabbitTemplate.convertAndSend(queuePaymentOrder, builderPaymentOrder(o));
 		return new OrderDTO(o);
 	}
 	
+	@Override
 	public OrderDTO updateStatusPayment(PaymentOrderStatus orderStatus) {
 		Order order = orderRepository.findById(orderStatus.getOrderId()).orElseThrow(
 				() -> new DefaultException("Order with ID: " + orderStatus.getOrderId() + " not found. Enter a valid ID.", "NOT_FOUND", 404));
 		order.setStatus(orderStatus.getStatus());
-		return new OrderDTO(orderRepository.save(order));
+		orderRepository.save(order);
+		auditClient.saveOrderAudit(order);
+		return new OrderDTO(order);
 	}
 	
 	private PaymentOrder builderPaymentOrder(Order o) {
 		
 		PaymentOrder paymentOrder = new PaymentOrder();
-		PaymentDTO paymentDto = new PaymentDTO();
-		paymentDto.setId(o.getPayment().getId());
-		paymentDto.setInstallments(o.getInstallment().getAmount());
+		PaymentDTO paymentDTO = new PaymentDTO();
+		
+		paymentDTO.setId(o.getPayment().getId());
+		paymentDTO.setInstallments(o.getInstallment().getAmount());
 		paymentOrder.setOrderId(o.getId());
-		paymentOrder.setPayment(paymentDto);
+		paymentOrder.setPayment(paymentDTO);
 		return paymentOrder;
 	}
 	

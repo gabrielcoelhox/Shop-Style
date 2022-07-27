@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class CustomerDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@NotNull
+	@NotNull (message = "id field cannot be null")
 	private Long id;
 	
-	@NotNull
+	@NotNull (message = "addressId field cannot be null")
 	private Long addressId;
 }

@@ -52,9 +52,7 @@ public class RabbitMQPublisher {
 		
 		this.amqpAdmin.declareQueue(skuOrderQueue);
 		this.amqpAdmin.declareQueue(paymentOrderQueue);
-		
 		this.amqpAdmin.declareExchange(exchange);
-		
 		this.amqpAdmin.declareBinding(relateSkuOrder);
 		this.amqpAdmin.declareBinding(relatePaymentOrder);
 	}

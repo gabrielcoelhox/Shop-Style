@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class CartDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@NotNull
+	@NotNull (message = "skuId field cannot be null")
 	private Long skuId;
 	
-	@NotNull
+	@NotNull (message = "quantity field cannot be null")
 	private Integer quantity;
 }

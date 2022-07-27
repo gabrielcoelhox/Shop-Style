@@ -26,7 +26,7 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(FeignClientException.class)
-	public ResponseEntity<StandardError> objectNotFound(FeignClientException ex, HttpServletRequest request){
+	public ResponseEntity<StandardError> feignException(FeignClientException ex, HttpServletRequest request){
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
 		error.setStatus(HttpStatus.NOT_FOUND.value());
