@@ -17,7 +17,7 @@ public class CustomerChangePasswordDTO {
 	@NotNull @Email
 	private String email;
 	
-	@CPF @NotNull
+	@NotNull @CPF
 	private String cpf;
 	
 	@NotNull @NotEmpty

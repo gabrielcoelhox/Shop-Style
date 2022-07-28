@@ -23,10 +23,10 @@ import com.shopstyle.msbffshop.clients.entities.Customer;
 public interface CustomerClient {
 
 	@PostMapping("/v1/login")
-	CustomerDTO loginCustomer(@RequestBody CustomerLoginDTO customerLoginDto);
+	CustomerDTO loginCustomer(@RequestBody CustomerLoginDTO customerLogin);
 	
 	@PostMapping("/v1/customers")
-	CustomerDTO saveCustomer(@RequestBody CustomerFormDTO customerFormDto);
+	CustomerDTO saveCustomer(@RequestBody CustomerFormDTO customerForm);
 	
 	@GetMapping("/v1/customers/{id}")
 	CustomerDTO findCustomerById(@PathVariable Long id);
@@ -35,16 +35,16 @@ public interface CustomerClient {
 	Customer findCustomerByEmail(@RequestParam(required = true) String email);
 	
 	@PutMapping("/v1/customers/{id}")
-	CustomerDTO updateCustomerById(@PathVariable Long id, @RequestBody CustomerFormDTO customerFormDto);
+	CustomerDTO updateCustomerById(@PathVariable Long id, @RequestBody CustomerFormDTO customerForm);
 	
 	@PutMapping("/v1/customers/{id}/password")
 	CustomerDTO changePasswordCustomer(@RequestBody CustomerChangePasswordDTO passwordDto, @PathVariable Long id);
 	
 	@PostMapping("/v1/addresses")
-	AddressDTO saveAddress(@RequestBody AddressFormDTO addressFormDto);
+	AddressDTO saveAddress(@RequestBody AddressFormDTO addressForm);
 
 	@PutMapping("/v1/addresses/{id}")
-	AddressDTO updateAddressById(@PathVariable Long id, @RequestBody AddressFormDTO addressFormDto);
+	AddressDTO updateAddressById(@PathVariable Long id, @RequestBody AddressFormDTO addressForm);
 	
 	@DeleteMapping("/v1/addresses/{id}")
 	void deleteAddressById(@PathVariable Long id);

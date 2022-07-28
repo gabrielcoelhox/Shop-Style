@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PaymentDTO implements Serializable {
+public class PaymentFormDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@NotNull

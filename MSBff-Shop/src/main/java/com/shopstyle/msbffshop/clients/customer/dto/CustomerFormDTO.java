@@ -3,7 +3,6 @@ package com.shopstyle.msbffshop.clients.customer.dto;
 import java.time.LocalDate;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -35,15 +34,14 @@ public class CustomerFormDTO {
 	private String cpf;
 	
 	@NotNull (message = "birthDate field cannot be null")
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	private LocalDate birthdate;
 	
 	@Email
 	@NotNull (message = "email field cannot be null")
 	private String email;
 	
-	@NotNull
-	@NotEmpty (message = "password field cannot be empty")
+	@NotNull (message = "password field cannot be null")
 	@Length(min = 6)
 	private String password;
 	

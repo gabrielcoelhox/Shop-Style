@@ -14,10 +14,10 @@ public class OrderFormDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@NotNull (message = "customer field cannot be null")
-	private CustomerDTO customer;
+	private CustomerFormDTO customer;
 	
 	@NotNull (message = "payment field cannot be null")
-	private PaymentDTO payment;
+	private PaymentFormDTO payment;
 	
 	@NotNull (message = "cart field cannot be null")
 	private List<CartDTO> cart;

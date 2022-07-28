@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.shopstyle.msbffshop.clients.catalog.dto.SkuDTO;
 import com.shopstyle.msbffshop.clients.customer.dto.AddressDTO;
+import com.shopstyle.msbffshop.clients.customer.dto.CustomerDTO;
 import com.shopstyle.msbffshop.clients.entities.Installment;
 import com.shopstyle.msbffshop.clients.enums.Status;
+import com.shopstyle.msbffshop.clients.payment.dto.PaymentDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

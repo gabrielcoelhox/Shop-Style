@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +35,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/bffshop")
 @RequiredArgsConstructor
 public class BffShopController {
 
@@ -48,13 +46,13 @@ public class BffShopController {
 	
 	private final OrderClient orderClient;
 
-	@GetMapping("/v1/customers/{id}")
+	@GetMapping("/bffshop/v1/customers/{id}")
 	@ApiOperation(value= "Customer by id")	
 	public ResponseEntity<CustomerDTO> findCustomerById(@PathVariable Long id) {
 		return new ResponseEntity<>(customerClient.findCustomerById(id), HttpStatus.OK);
 	}
 	
-	@PostMapping("/v1/customers")
+	@PostMapping("/bffshop/v1/customers")
 	@ApiOperation(value= "Insert a new Customer")	
 	public ResponseEntity<CustomerDTO> insertCustomer(@RequestBody CustomerFormDTO form) {
 		return new ResponseEntity<>(customerClient.saveCustomer(form), HttpStatus.CREATED);
@@ -66,31 +64,31 @@ public class BffShopController {
 		return new ResponseEntity<>(customerClient.loginCustomer(form), HttpStatus.ACCEPTED);
 	}
 	
-	@PutMapping("/v1/customers/{id}")
+	@PutMapping("/bffshop/v1/customers/{id}")
 	@ApiOperation(value= "Update Customer")	
 	public ResponseEntity<CustomerDTO> updateCustomerById(@RequestBody CustomerFormDTO form, @PathVariable Long id) {
 		return new ResponseEntity<>(customerClient.updateCustomerById(id, form), HttpStatus.OK);
 	}
 	
-	@PutMapping("/v1/customers/{id}/password")
+	@PutMapping("/bffshop/v1/customers/{id}/password")
 	@ApiOperation(value= "Change Password")	
 	public ResponseEntity<CustomerDTO> changePassword(@RequestBody CustomerChangePasswordDTO passwordDto, @PathVariable Long id) {
 		return new ResponseEntity<>(customerClient.changePasswordCustomer(passwordDto, id), HttpStatus.ACCEPTED);
 	}
 	
-	@PostMapping("/v1/addresses")
+	@PostMapping("/bffshop/v1/addresses")
 	@ApiOperation(value= "Insert a new Address")	
 	public ResponseEntity<AddressDTO> insertAddress(@RequestBody AddressFormDTO form){
 		return new ResponseEntity<>(customerClient.saveAddress(form), HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/v1/addresses/{id}")
+	@PutMapping("/bffshop/v1/addresses/{id}")
 	@ApiOperation(value= "Update Address")	
 	public ResponseEntity<AddressDTO> updateAddressById(@PathVariable Long id, @RequestBody AddressFormDTO form){
 		return new ResponseEntity<>(customerClient.updateAddressById(id, form), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/v1/addresses/{id}")
+	@DeleteMapping("/bffshop/v1/addresses/{id}")
 	@ApiOperation(value= "Delete Address")
 	public ResponseEntity<Void> deleteAddressById(@PathVariable Long id){
 		customerClient.deleteAddressById(id); 
@@ -103,37 +101,37 @@ public class BffShopController {
 		return new ResponseEntity<>(catalogClient.findAllProducts(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/v1/products/{id}")
+	@GetMapping("/bffshop/v1/products/{id}")
 	@ApiOperation(value= "Find Product")	
 	public ResponseEntity<ProductDTO> findProductById(@PathVariable Long id) {
 		return new ResponseEntity<>(catalogClient.findProductById(id), HttpStatus.OK);
 	}
 	
-	@GetMapping("/v1/categories")
+	@GetMapping("/bffshop/v1/categories")
 	@ApiOperation(value= "Find all Categories")	
 	public ResponseEntity<List<CategoryDTO>> findAllCategories() {
 		return new ResponseEntity<>(catalogClient.findAllCategories(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/v1/categories/{id}/products")
+	@GetMapping("/bffshop/v1/categories/{id}/products")
 	@ApiOperation(value= "Find Product by id Category")	
 	public ResponseEntity<List<ProductDTO>> findListProductsByIdCategory(@PathVariable Long id) {
 		return new ResponseEntity<>(catalogClient.findProductsByIdCategory(id), HttpStatus.OK);
 	}
 	
-	@GetMapping("/v1/payments")
+	@GetMapping("/bffshop/v1/payments")
 	@ApiOperation(value= "Find all Payments")
 	public ResponseEntity<List<PaymentDTO>> findAllPayments() {
 		return new ResponseEntity<>(paymentClient.findAllPayments(), HttpStatus.OK);
 	}
 	
-	@PostMapping("/v1/orders")
+	@PostMapping("/bffshop/v1/orders")
 	@ApiOperation(value= "Insert a new Order")	
 	public ResponseEntity<OrderDTO> insertOrder(@RequestBody OrderFormDTO form){
 		return new ResponseEntity<>(orderClient.saveOrder(form), HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/v1/orders/customers/{customerId}")
+	@GetMapping("/bffshop/v1/orders/customers/{customerId}")
 	@ApiOperation(value= "Find Order by Customer")
 	public ResponseEntity<List<OrderDTO>> findOrdersByCustomerId(@PathVariable Long customerId, @RequestParam(required = false) LocalDate startDate, 
 			@RequestParam(required = false) LocalDate endDate, @RequestParam(required = false) Status status) {
